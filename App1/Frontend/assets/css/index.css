@@ -1,0 +1,35 @@
+body{
+    background: #EFF3FF;
+}
+
+#main{
+    padding-top: 430px;
+    width: 50%;
+    color: #045066;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+#titleForm{
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 20%;
+}
+
+#cover{
+    width: 100%;
+    height: auto;
+    position: absolute;
+}
+
+#logo{
+    position: absolute;
+    padding-top: 10px;
+    margin-left: 45%;
+    width: 7%;
+}
+
+.form-control{
+    border-radius: 20px;
+    width: 70%;
+}
