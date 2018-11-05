@@ -20,13 +20,20 @@
     <img src="./static/image/cover.png" id="cover">
     <img src="./static/image/logo.png" id="logo">
     <div id="main">
-      <p id="titleForm">Nhập thông tin hành khách</p>
+      <p id="titleForm" v-if="login" >{{title}}</p>
       <div id="app"> </div>
     </div>
   </div>
-
-  
-
+  <script>
+      var vm = new Vue({   
+        el: '#titleForm',
+        data: {
+          title: 'Đăng nhập để tiếp tục',
+          login: true 
+        }
+      
+      })
+    </script>
 </body>
 
 </html>

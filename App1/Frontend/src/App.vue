@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-   <router-view :to="{ name: 'FormInformation' }"/>
+   <router-view :to="{ name: 'FormLogin' }"/>
   </div>
 </template>
 
