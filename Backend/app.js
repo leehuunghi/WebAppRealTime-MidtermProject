@@ -3,7 +3,7 @@ var express = require('express'),
     cors = require('cors'),
     morgan = require('morgan');
 
-var requestReceiverCtrl = require('./apiControllers/requestReceiverCtrl');
+var bookingBikeCtrl = require('./apiControllers/bookingBikeCtrl');
 var employeeCtrl = require('./apiControllers/employeeCtrl');
 app = express();
 
@@ -19,8 +19,8 @@ app.use(cors());
 //     res.statusCode = 200;
 // })
 
-app.use('/api/users/', employeeCtrl);
-app.use('/api/sendRequestFromUser/', requestReceiverCtrl);
+app.use('/api/employee/', employeeCtrl);
+app.use('/api/bookingBike/book', bookingBikeCtrl);
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
