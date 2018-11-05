@@ -5,8 +5,8 @@ var createConnection = () => {
     	host: '127.0.0.1',
     	port: '8889',
     	user: 'root',
-    	password: 'root',
-    	database: 'qlbh'
+    	password: '12345678a',
+    	database: 'DatabaseCallBike'
     });
 }
 
