@@ -11,6 +11,12 @@ exports.addDriver = driverEntity => {
 }
 
 exports.login = loginEntity => {
+    // loginEntity {
+    //     username
+    //     password
+    //     role
+    // }
+
     var md5_pwd = md5(loginEntity.password);
     if (loginEntity.role === `employee`) {
         var sql = `select * from Employee where username = '${loginEntity.Username} and password = '${md5_pwd}`;
