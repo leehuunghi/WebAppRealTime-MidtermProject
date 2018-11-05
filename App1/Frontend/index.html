@@ -1,56 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>  Request Receiver </title>
-    <link rel="icon" type="image/png" href="./assets/image/logo.png" />
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="./assets/css/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> Request Receiver </title>
+  <link rel="icon" type="image/png" href="./static/image/logo.png" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <link rel="stylesheet" type="text/css" href="./static/css/index.css">
 </head>
 
 <body>
-
-    <img src="./assets/image/cover.png" id="cover">
-    <img src="./assets/image/logo.png" id="logo">
-
+  <div>
+    <img src="./static/image/cover.png" id="cover">
+    <img src="./static/image/logo.png" id="logo">
     <div id="main">
-        <p id="titleForm">Nhập thông tin hành khách</p>
-        <form action="">
-
-            <div class="row">
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    <div class="form-group">
-                        <label>HỌ TÊN</label>
-                        <input type="" class="form-control" id="hoten" placeholder="Trần Văn A">
-                    </div>
-                    <div class="form-group">
-                        <label>SỐ ĐIỆN THOẠI</label>
-                        <input type="" class="form-control" id="sdt" placeholder="0968921xxx">
-                    </div>
-                </div>
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    <div class="form-group">
-                        <label>ĐỊA CHỈ ĐÓN</label>
-                        <input type="" class="form-control" id="diachi" placeholder="227 Nguyễn Văn Cừ, P4, Q5">
-                    </div>
-                    <div class="form-group">
-                        <label>GHI CHÚ</label>
-                        <input type="" class="form-control" id="ghichu" placeholder="Đón ở cổng...">
-                    </div>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <img src="./assets/image/right-arrow.png" id="submit">
-                </div>
-            </div>
-
-        </form>
+      <p id="titleForm">Nhập thông tin hành khách</p>
+      <div id="app"> </div>
     </div>
+  </div>
+
+  
+
 </body>
 
 </html>

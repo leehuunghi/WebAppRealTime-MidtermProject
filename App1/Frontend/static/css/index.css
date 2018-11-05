@@ -41,8 +41,13 @@ body{
     font-size: 16px;
 }
 
-#submit{
-    margin-top: 55%;
-    width: 50%;
+#imgSubmit{
+    width: 60%;
     height: auto;
+}
+
+#btnSubmit{
+    margin-top: 75px;
+    background: #EFF3FF;
+    border: 0px;
 }
