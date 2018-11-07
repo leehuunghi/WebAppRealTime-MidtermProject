@@ -25,13 +25,15 @@
 
 <script>
 import axios from "axios";
+import md5 from "crypto-md5";
 
 export default {
   data() {
     return {
       title: "Login",
-      formdata: {role: "employee" },
-      message: "",
+      formdata: {
+        role: "employee"
+      },
       auth: "",
       access_token:"",
       refresh_token:""
@@ -39,20 +41,18 @@ export default {
   },
   methods: {
     sendLogin() {
+      var passmd5 = md5($('#hoten').val());
+      this.formdata.password = passmd5;
       axios
-        .post("http://192.168.1.16:3000/api/employee/login", this.formdata)
+        .post("http://172.16.1.200:3000/api/employee/login", this.formdata)
         .then(response => {
           alert(response.data.auth);
-           alert(response.data.access_token);
-            alert(response.data.refresh_token);
           if (response.data.auth) {
-            this.message = "You send information success";
             this.auth = response.data.auth;
+           
           } else {
-            this.message = "You send information fail";
-            this.auth = response.data.auth;
+           location.href="/form";
           }
-          alert(this.message);
         })
         .catch(err => {
           alert(err);

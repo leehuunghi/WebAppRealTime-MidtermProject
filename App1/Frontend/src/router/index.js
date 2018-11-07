@@ -8,14 +8,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: 'form',
-      name: 'FormInformation',
-      component: FormInformation
-    },
-    {
       path: '',
       name: 'FormLogin',
       component: FormLogin
-    }
+    },
+    {
+      path: '/form',
+      name: 'FormInformation',
+      component: FormInformation
+    },
   ]
 })
