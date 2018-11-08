@@ -5,6 +5,9 @@ var express = require('express'),
 
 var bookingBikeCtrl = require('./apiControllers/bookingBikeCtrl');
 var employeeCtrl = require('./apiControllers/employeeCtrl');
+
+var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
+
 app = express();
 
 app.use(morgan('dev')); 
@@ -20,7 +23,7 @@ app.use(cors());
 // })
 
 app.use('/api/employee/', employeeCtrl);
-app.use('/api/bookingBike/book', bookingBikeCtrl);
+app.use('/api/bookingBike/', verifyAccessToken, bookingBikeCtrl);
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -17,11 +17,10 @@ exports.login = loginEntity => {
     //     role
     // }
     var sql;
-    var md5_pwd = md5(loginEntity.password);
     if (loginEntity.role === `employee`) {
-        sql = `select * from Employee where username = '${loginEntity.username}' and password = '${md5_pwd}'`;
+        sql = `select * from Employee where username = '${loginEntity.username}' and password = '${loginEntity.password}'`;
     } else if (loginEntity.role === `driver`) {
-        sql = `select * from Driver where username = '${loginEntity.username}' and password = '${md5_pwd}'`;
+        sql = `select * from Driver where username = '${loginEntity.username}' and password = '${loginEntity.password}'`;
     }
     return db.load(sql);
 }

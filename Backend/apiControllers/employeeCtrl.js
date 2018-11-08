@@ -17,6 +17,7 @@ router.post('/login', (req, res) => {
             var loginEntity = rows[0];
             var acToken = authRepo.generateAccessToken(loginEntity);
             var rfToken = authRepo.generateRefreshToken();
+            console.log(acToken);
 
             authRepo.updateRefreshToken(loginEntity.ID, rfToken).then(value => {
                 res.json({
