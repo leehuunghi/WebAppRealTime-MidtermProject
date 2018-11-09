@@ -1,4 +1,6 @@
 <template>
+<div>
+   <p id="titleForm">Đăng nhập để tiếp tục</p>
      <form action="" method="POST" v-on:submit.prevent="sendLogin">
 
             <div class="row">
@@ -21,6 +23,7 @@
             </div>
 
         </form>
+  </div>
 </template>
 
 <script>
@@ -35,23 +38,28 @@ export default {
         role: "employee"
       },
       auth: "",
-      access_token:"",
-      refresh_token:""
+      access_token: "",
+      refresh_token: ""
     };
   },
   methods: {
     sendLogin() {
-      var passmd5 = md5($('#hoten').val());
+      var passmd5 = md5($("#hoten").val());
       this.formdata.password = passmd5;
       axios
-        .post("http://172.16.1.200:3000/api/employee/login", this.formdata)
+        .post("http://172.16.1.32:3000/api/employee/login", this.formdata)
         .then(response => {
-          alert(response.data.auth);
           if (response.data.auth) {
             this.auth = response.data.auth;
-           
+            this.access_token = response.data.access_token;
+            this.refresh_token = response.data.refresh_token;
+
+            this.$session.set('access_token', response.data.access_token);
+            this.$session.set('refresh_token', response.data.refresh_token);
+
+            this.$emit("authenticated", true);
+            this.$router.replace({ name: "FormInformation" });
           } else {
-           location.href="/form";
           }
         })
         .catch(err => {

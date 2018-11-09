@@ -1,6 +1,7 @@
 <template>
+<div>
+    <p id="titleForm">Nhập thông tin hành khách</p>
   <form action="" method="POST" v-on:submit.prevent="sendinfo">
-
             <div class="row">
                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                     <div class="form-group">
@@ -33,10 +34,12 @@
             </div>
 
         </form>
+    </div>
 </template>
 
 <script>
 import axios from "axios";
+import token from "@/components/FormLogin"
 
 export default {
   data() {
@@ -50,19 +53,20 @@ export default {
   methods: {
     sendinfo() {
       axios
-        .post("http://172.16.1.142:3000/api/bookingBike/book", this.formdata)
+        .post("http://172.16.1.32:3000/api/bookingBike/book", this.formdata, {
+            headers: {
+                'x-access-token':  this.$session.get('access_token')
+            }
+        })
         .then(response => {
           console.log(response);
-          alert(response.data.success);
           if (response.data.success > 0) {
-            alert("true");
             this.message = "You send information success";
             this.success = response.data.success;
           } else {
             this.message = "You send information fail";
             this.success = response.data.success;
           }
-          alert(this.message);
         })
         .catch(err => {
           alert(err);
