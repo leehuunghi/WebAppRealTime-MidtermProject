@@ -53,7 +53,7 @@ export default {
   methods: {
     sendinfo() {
       axios
-        .post("http://172.16.1.32:3000/api/bookingBike/book", this.formdata, {
+        .post("http://192.168.1.48:3000/api/bookingBike/book", this.formdata, {
             headers: {
                 'x-access-token':  this.$session.get('access_token')
             }
