@@ -6,6 +6,7 @@ var router = express.Router();
 
 var server = http.Server(express());
 var io = socketIO(server);
+var events = require('../event/events');
 
 var bookingBikeRepo = require('../repos/bookingBikeRepo');
 
@@ -15,24 +16,19 @@ io.on('connection', socket => {
     socket.on('load-all-request', () => {
         bookingBikeRepo.loadAll().then(values => {
             socket.emit('server-send-all-request', values);
-        }
-    )
-})
-
+        })
+    })
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
 
-    socket.on('chat', msg => {
-        // console.log(`message: ${msg}`);
-        io.emit('chat', msg);
-    });
 });
 
 router.post('/book', (req, res) => {
     bookingBikeRepo.add(req.body).then(value => {
         res.statusCode = 201;
+        console.log('insert success')
         res.json({
             success: 1
         });
