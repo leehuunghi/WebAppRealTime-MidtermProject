@@ -1,7 +1,7 @@
 <template>
   <div id="app">
    <router-view :to="{ name: 'FormLogin' }"/>
-   <!-- <router-view v-if="authenticated" :to="{ name: 'FormInformation' }" /> -->
+   <router-view v-if="authenticated" :to="{ name: 'Confirm' }" />
   </div>
 </template>
 
@@ -9,6 +9,6 @@
 export default {
   data:{
     name: 'App',
-    // authenticated: false
+    authenticated: false
   }
 }

@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "crypto-md5": "^1.0.0",
+    "here-js-api": "^1.0.10",
     "uiv": "^0.28.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

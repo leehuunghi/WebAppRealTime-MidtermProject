@@ -4,6 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import 'here-js-api/scripts/mapsjs-core';
+import 'here-js-api/scripts/mapsjs-service';
+import 'here-js-api/scripts/mapsjs-ui';
+import 'here-js-api/scripts/mapsjs-mapevents';
+import 'here-js-api/scripts/mapsjs-clustering';
+
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 Vue.config.productionTip = false
