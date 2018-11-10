@@ -25,6 +25,9 @@ app.use(cors());
 app.use('/api/employee/', employeeCtrl);
 app.use('/api/bookingBike/', verifyAccessToken, bookingBikeCtrl);
 
+//websocket
+require('./websocket/identifyLocation_ws');
+
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`API running on PORT ${PORT}`);

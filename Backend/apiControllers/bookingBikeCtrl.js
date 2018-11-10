@@ -10,28 +10,27 @@ var events = require('../event/events');
 
 var bookingBikeRepo = require('../repos/bookingBikeRepo');
 
-io.on('connection', socket => {
-    console.log('a user connected');
-
-    socket.on('load-all-request', () => {
-        bookingBikeRepo.loadAll().then(values => {
-            socket.emit('server-send-all-request', values);
-        })
+router.get('/loadAllRequestBooking', () => {
+    bookingBikeRepo.loadAll().then(values => {
+        res.statusCode = 200;
+        res.json({
+            listRequestBooking: values
+        });
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
     })
+})
 
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-
-});
+router.get('/requestBookingEvent', events.subscribeRequestBooking);
 
 router.post('/book', (req, res) => {
     bookingBikeRepo.add(req.body).then(value => {
         res.statusCode = 201;
-        console.log('insert success')
         res.json({
             success: 1
         });
+        events.publishCategoryBooking(req.body);
     })
     .catch(err => {
         console.log(err);

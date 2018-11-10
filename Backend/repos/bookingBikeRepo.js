@@ -11,3 +11,13 @@ exports.loadAll = () => {
     var sql = `select * from BookingBike`;
     return db.load(sql);
 }
+
+exports.updateLocationGuest = location => {
+    var sql = `UPDATE BookingBike SET guest_lat = ${location.lat}, guest_lng = ${location.lng} where ID = ${location.ID}`;
+    return db.insert(sql);
+}
+
+exports.updateStatus = entity => {
+    var sql = `update BookingBike set status = ${entity.status} where ID = ${entity.ID}`;
+    return db.insert(sql);
+}

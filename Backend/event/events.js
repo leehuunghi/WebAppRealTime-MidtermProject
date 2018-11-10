@@ -31,3 +31,28 @@ var subscribeEvent = (req, res, event) => {
 //
 // event pub-sub
 
+var REQUEST_BOOKING = 'REQUEST_BOOKING';
+var STATUS_BOOKING_UPDATE = 'STATUS_BOOKING_UPDATE';
+
+var subscribeRequestBooking = (req, res) => {
+    subscribeEvent(req, res, REQUEST_BOOKING);
+}
+
+var subscribeStatusBookingUpdate = (req, res) => {
+    subscribeEvent(req, res, STATUS_BOOKING_UPDATE);
+}
+
+var publishRequestBooking = requestObj => {
+    emitter.emit(REQUEST_BOOKING, requestObj);
+}
+
+var publishStatusBookingUpdate = requestObj => {
+    emitter.emit(STATUS_BOOKING_UPDATE, requestObj);
+}
+
+module.exports = {
+    subscribeRequestBooking,
+    subscribeStatusBookingUpdate,
+    publishRequestBooking,
+    publishStatusBookingUpdate
+}
