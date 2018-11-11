@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900" rel="stylesheet">
+    <link href="res/css/layout.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body style="height: 100%;">
+    <div class="navbar" id="navbar" style="position: fixed; display: none; width: 100%; z-index: 999;">
+        <div class="row" style="width: 100%;">
+            <div class="col-md-2">
+                <img src="res/pics/logo-desktop-white.png" width="60px;" style="margin: 0 10px 0 0;">
+            </div>
+            <div class="col-md-8 navTitle">
+            </div>
+            <div class="col-md-2" style="text-align: right;">
+                <div>
+                    <button class="logoutBtn-r">ĐĂNG XUẤT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 60%;">
+        <div class="view img-responsive cover">
+            <div class="view img-responsive avatar-manager">
+                <img src="res/pics/logo-desktop.png" width="60px;" style="margin: 10px;">
+            </div>
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <button class="logoutBtn">ĐĂNG XUẤT</button>
+            </div>
+        </div>
+    </div>
+    <div class="content blueText center" style="margin-top: -60px;">
+        <div class="tit">Chào Nguyên!<br>Danh sách các request</div>
+        <div class="i-am-centered" style="margin-top: 20px; margin-bottom: 50px;">
+            <div class="row tableTitle" id="title">
+                <div class="col-md-1">SỐ THỨ TỰ</div>
+                <div class="col-md-3">HÀNH KHÁCH</div>
+                <div class="col-md-3">ĐỊA CHỈ</div>
+                <div class="col-md-2">THỜI GIAN ĐẶT</div>
+                <div class="col-md-3">TRẠNG THÁI</div>
+            </div>
+            <div class="row tableRow" id="row1">
+                <div class="col-md-1">1</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 notLocated">
+                    Chưa được định vị
+                </div>
+            </div>
+            <div class="row tableRow" id="row2">
+                <div class="col-md-1">2</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 located">
+                    Đã định vị xong
+                </div>
+            </div>
+            <div class="row tableRow" id="row3">
+                <div class="col-md-1">3</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 taken">
+                    Đã có xe nhận
+                    <button class="shortestWay" style="float: right;">
+                        <img src="res/icons/shortest-way.png">
+                    </button>
+                </div>
+            </div>
+            <div class="row tableRow" id="row4">
+                <div class="col-md-1">4</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 moving">
+                    Đang di chuyển
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).scroll(function () {
+            var y = $(this).scrollTop();
+            if (y > 200) {
+                $('#navbar').show();
+            } else {
+                $('#navbar').hide();
+            }
+        })
+    </script>
+
+</body>
+
+</html>
