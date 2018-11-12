@@ -1,42 +1,91 @@
 <template>
+<div>
+    <ul id="flag"></ul>
     <ul >
         <li v-for="item in requests" :key="item.id" style=" list-style-type: none;">
             <div class="row" id="item" v-on:click="Indentify(item.id)">
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    {{item.id}}
+                   #{{item.ID}}
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    {{item.time}}
+                    {{item.Time}}
                 </div>  
             </div>
         </li>
     </ul>
+</div>
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   data() {
     return {
-            requests: [
-                {id: 1, time: 11, note: 112},
-                {id: 2, time: 10},
-                {id: 3, time: 'Book'},
-            ]
+      requests: []
     };
   },
-  methods:{
-      Indentify(id) {
+  created() {
+    var self = this;
+    axios
+      .get("http://192.168.1.13:3000/api/bookingBike/loadAllRequestBooking", {
+        headers: {
+          "x-access-token": this.$session.get("access_token")
+        }
+      })
+      .then(result => {
+        this.requests = result.data.listRequestBooking;
+      })
+      .catch(err => {
+        alert(err);
+      });
 
-          EventBus.$emit('sendId', id);
+   
+    // var src = new EventSource(
+    //   "http://192.168.1.13:3000/api/bookingBike/requestBookingEvent",
+    //   {
+    //     headers: {
+    //       "x-access-token": this.$session.get("access_token")
+    //     }
+    //   }
+    // );
 
-        //   this.$session.set('id', id);
-          var item = this.requests.find(x => x.id == id);
-        //   this.$session.set('note', item.note);
-      }
+    // src.addEventListener("REQUEST_BOOKING", response => {
+    // alert(1);
+    //   var more = `<li style=" list-style-type: none;">
+    //         <div class="row" id="item" v-on:click="Indentify(item.id)">
+    //             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    //                ${response.data.ID}
+    //             </div>
+    //             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    //                 ${response.data.time}
+    //             </div>
+    //         </div>
+    //     </li>`;
+
+    //     $("#flag").innerHTML += more;
+    // });
+  },
+  mounted(){
+       this.$sse('http://192.168.1.13:3000/api/a', {format: 'json' }
+    )
+      .then(sse => {
+        sse.subscribe('REQUEST_BOOKING', data1 => {
+         alert(JSON.stringify(data1));
+
+        });
+      }).catch(err => {
+          alert(err);
+      });
+  },
+  methods: {
+    Indentify(id) {
+      EventBus.$emit("sendId", id);
+
+      var item = this.requests.find(x => x.id == id);
+    }
   }
 };
-
 </script>
 
 </<style>

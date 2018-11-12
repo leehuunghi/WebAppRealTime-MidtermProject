@@ -14,6 +14,9 @@ import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 Vue.config.productionTip = false
 
+import VueSSE from 'vue-sse';
+Vue.use(VueSSE);
+
 window.EventBus = new Vue({  
   data(){
     return {
