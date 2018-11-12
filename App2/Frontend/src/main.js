@@ -14,6 +14,14 @@ import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 Vue.config.productionTip = false
 
+window.EventBus = new Vue({  
+  data(){
+    return {
+      AddressCustomer: 2
+    }
+  }
+ });
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

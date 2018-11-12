@@ -1,23 +1,27 @@
 <template>
-  <div id="confirm">
-    <Address/>
-     <HereMap
+  <div id="confirm" class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <Request/>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+       <HereMap
             appId="SxxR970XbZjWq11DxSea"
             appCode="ZIgTe3WyzSsHXAsKjPBljg"
-            lat="37.7397"
-            lng="-121.4252"
+            lat="10.762622"
+            lng="106.660172"
             width="100%"
             height="835px" />
+    </div>  
   </div>
 </template>
 
 <script>
-import Address from "./Address";
+import Request from "./Request";
 import HereMap from "./Map";
 
 export default {
   components: {
-    Address,
+    Request,
     HereMap
   }
 };
