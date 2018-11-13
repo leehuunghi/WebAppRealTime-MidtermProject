@@ -1,14 +1,14 @@
 <template>
 <div>
-    <ul id="flag"></ul>
-    <ul >
+    <ul id="newItem" v-on:click="CheckClick"></ul>
+    <ul>
         <li v-for="item in requests" :key="item.id" style=" list-style-type: none;">
             <div class="row" id="item" v-on:click="Indentify(item.id)">
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                    #{{item.ID}}
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    {{item.Time}}
+                    {{item.time}}
                 </div>  
             </div>
         </li>
@@ -28,7 +28,7 @@ export default {
   created() {
     var self = this;
     axios
-      .get("http://192.168.1.13:3000/api/bookingBike/loadAllRequestBooking", {
+      .get("http://172.16.0.254:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
           "x-access-token": this.$session.get("access_token")
         }
@@ -39,50 +39,44 @@ export default {
       .catch(err => {
         alert(err);
       });
-
-   
-    // var src = new EventSource(
-    //   "http://192.168.1.13:3000/api/bookingBike/requestBookingEvent",
-    //   {
-    //     headers: {
-    //       "x-access-token": this.$session.get("access_token")
-    //     }
-    //   }
-    // );
-
-    // src.addEventListener("REQUEST_BOOKING", response => {
-    // alert(1);
-    //   var more = `<li style=" list-style-type: none;">
-    //         <div class="row" id="item" v-on:click="Indentify(item.id)">
-    //             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-    //                ${response.data.ID}
-    //             </div>
-    //             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-    //                 ${response.data.time}
-    //             </div>
-    //         </div>
-    //     </li>`;
-
-    //     $("#flag").innerHTML += more;
-    // });
+    
   },
-  mounted(){
-       this.$sse('http://192.168.1.13:3000/api/a', {format: 'json' }
-    )
+  mounted() {
+    this.$sse("http://172.16.0.254:3000/api/a", { format: "json" })
       .then(sse => {
-        sse.subscribe('REQUEST_BOOKING', data1 => {
-         alert(JSON.stringify(data1));
-
+        sse.subscribe("REQUEST_BOOKING", response => {
+          var liNew = `<li style=" list-style-type: none;" id="${response[0].ID}">
+            <div class="row new" id="item">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                   # ${response[0].ID}
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    ${response[0].time}
+                </div>  
+            </div>
+        </li>`;
+          $("#newItem").append(liNew);
         });
-      }).catch(err => {
-          alert(err);
+      })
+      .catch(err => {
+        alert(err);
       });
+
   },
   methods: {
     Indentify(id) {
+      alert("Identify");
       EventBus.$emit("sendId", id);
 
       var item = this.requests.find(x => x.id == id);
+    },
+
+    CheckClick(){
+
+      alert("CheckList");
+      alert(JSON.stringify($("#newItem li.selected").attr('id')));
+    // $("#newItem").on('click', Indentify($("#newItem li.selected").text()));
+    alert(2);
     }
   }
 };
