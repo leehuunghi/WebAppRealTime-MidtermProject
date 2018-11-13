@@ -17,7 +17,7 @@
                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                     <div class="form-group">
                         <label>ĐỊA CHỈ ĐÓN</label>
-                        <input type="text" name="adress" class="form-control" v-model="formdata.adress" id="diachi"
+                        <input type="text" name="adress" class="form-control" v-model="formdata.address" id="diachi"
                             placeholder="227 Nguyễn Văn Cừ, P4, Q5">
                     </div>
                     <div class="form-group">
@@ -53,7 +53,7 @@ export default {
   methods: {
     sendinfo() {
       axios
-        .post("http://192.168.1.48:3000/api/bookingBike/book", this.formdata, {
+        .post("http://172.16.0.254:3000/api/bookingBike/book", this.formdata, {
             headers: {
                 'x-access-token':  this.$session.get('access_token')
             }
