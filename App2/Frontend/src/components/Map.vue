@@ -29,7 +29,9 @@ export default {
       platform: {},
       AddressCustomer: "",
       NoteCustomer: "",
-      View: []
+      View: [], 
+      marker: "", 
+      icon: ""
     };
   },
   props: {
@@ -47,37 +49,36 @@ export default {
     });
 
     //reveive address data
-    EventBus.$on("sendId", id => {
-      // this.AddressCustomer = String(id);
-       var self = this;
-      alert(id);
-      this.NoteCustomer = "Cổng chính";
-      this.AddressCustomer =
-        "227 ĐƯỜNG Nguyễn Văn Cừ, Quận 5, Ho Chi Minh, Vietnam";
-
+    EventBus.$on("sendId", (id, _address, _note) => {
+      this.AddressCustomer = _address;
+      this.NoteCustomer = _note;
+      var self = this;
+      var _lat, _lng;
+      this.icon = new H.map.Icon("/static/icons/marker.png");
+      var url =  "https://geocoder.api.here.com/6.2/geocode.json?app_id=SxxR970XbZjWq11DxSea&app_code=ZIgTe3WyzSsHXAsKjPBljg&searchtext=" + this.AddressCustomer;
       axios
-        .get(
-          "https://geocoder.api.here.com/6.2/geocode.json?app_id=SxxR970XbZjWq11DxSea&app_code=ZIgTe3WyzSsHXAsKjPBljg&searchtext=227 ĐƯỜNG Nguyễn Văn Cừ, Quận 5, Ho Chi Minh, Vietnam"
-        )
+        .get(url)
         .then(result => {
-          var _lat =
+          _lat.splice(0,_lat.length);
+           _lng.splice(0,_lat.length);
+       _lat =
             result.data.Response.View[0].Result[0].Location.DisplayPosition
               .Latitude;
-          var _lng =
+       _lng =
             result.data.Response.View[0].Result[0].Location.DisplayPosition
               .Longitude;
-          var icon = new H.map.Icon("/static/icons/marker.png");
+          
           self.coord.lat = _lat;
           self.coord.lng = _lng;
-          // var coord = { lat: _lat, lng: _lng };
-          var marker = new H.map.Marker(self.coord, { icon: icon });
 
-          marker.draggable = true;
+          this.marker = new H.map.Marker(self.coord, { icon: icon });
+
+          this.marker.draggable = true;
     
-          this.map.addObject(marker);
+          this.map.addObject(this.marker);
           this.map.setCenter(self.coord);
 
-          marker.addEventListener(
+          this.marker.addEventListener(
             "dragstart",
             function() {
               var target = ev.target;
@@ -88,7 +89,7 @@ export default {
             false
           );
 
-          marker.addEventListener(
+          this.marker.addEventListener(
             "dragend",
             function(ev) {
               var target = ev.target;
@@ -100,7 +101,7 @@ export default {
             false
           );
 
-          marker.addEventListener(
+          this.marker.addEventListener(
             "drag",
             function(ev) {
              
@@ -124,7 +125,7 @@ export default {
   mounted() {
     var defaultLayers = this.platform.createDefaultLayers();
 
-    this.map = new H.Map(this.$refs.map, defaultLayers.normal.map, {
+    this.map = new H.Map(this.$refs.map, defaultLayers.terrain.map, {
       zoom: 15,
       center: { lng: this.lng, lat: this.lat }
     });
