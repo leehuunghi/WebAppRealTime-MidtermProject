@@ -12,18 +12,83 @@
         <!--Map View Controller-->
         <scene sceneID="wMF-X1-fdh">
             <objects>
-                <viewController id="Qu0-ji-Nx6" customClass="MapViewController" sceneMemberID="viewController">
+                <viewController id="Qu0-ji-Nx6" customClass="MNMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QqF-xr-RQj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rCX-pY-sHv" customClass="NMAMapView">
-                                <rect key="frame" x="51" y="103" width="256" height="508"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P56-1c-JHr">
+                                <rect key="frame" x="0.0" y="20" width="375" height="52"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Group 4.png" translatesAutoresizingMaskIntoConstraints="NO" id="Gkj-kr-a4T">
+                                        <rect key="frame" x="19" y="12" width="37" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="28" id="T4G-uF-oa8"/>
+                                            <constraint firstAttribute="width" constant="37" id="iZV-nO-NlB"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chào" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cFh-st-ZrH">
+                                        <rect key="frame" x="73" y="9" width="47" height="15"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="47" id="TXH-ga-HJ5"/>
+                                            <constraint firstAttribute="height" constant="15" id="ZkP-49-Gsc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AYz-E4-v0K">
+                                        <rect key="frame" x="73" y="25" width="84" height="18"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="84" id="0ec-D1-kN7"/>
+                                            <constraint firstAttribute="height" constant="18" id="GcS-rE-CcQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="ĐĂNG XUẤT"/>
+                                    </button>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="8Yd-ZP-fzD">
+                                        <rect key="frame" x="203" y="15" width="126" height="23"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="22" id="YqE-fn-4Rm"/>
+                                            <constraint firstAttribute="width" constant="126" id="ccC-ce-clx"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Ready"/>
+                                            <segment title="Standby"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="8Yd-ZP-fzD" firstAttribute="top" secondItem="P56-1c-JHr" secondAttribute="top" constant="15" id="JLH-Dj-hhR"/>
+                                    <constraint firstItem="AYz-E4-v0K" firstAttribute="leading" secondItem="P56-1c-JHr" secondAttribute="leading" constant="73" id="Lzi-pw-PX7"/>
+                                    <constraint firstItem="8Yd-ZP-fzD" firstAttribute="leading" secondItem="P56-1c-JHr" secondAttribute="leading" constant="203" id="UTk-bj-RDW"/>
+                                    <constraint firstItem="cFh-st-ZrH" firstAttribute="leading" secondItem="P56-1c-JHr" secondAttribute="leading" constant="73" id="aaq-HN-Qar"/>
+                                    <constraint firstItem="AYz-E4-v0K" firstAttribute="top" secondItem="P56-1c-JHr" secondAttribute="top" constant="25" id="bo6-zW-kbp"/>
+                                    <constraint firstAttribute="height" constant="52" id="ffN-sU-2uB"/>
+                                    <constraint firstItem="Gkj-kr-a4T" firstAttribute="top" secondItem="P56-1c-JHr" secondAttribute="top" constant="12" id="k0Q-kj-X51"/>
+                                    <constraint firstItem="Gkj-kr-a4T" firstAttribute="leading" secondItem="P56-1c-JHr" secondAttribute="leading" constant="19" id="m73-Uo-aq1"/>
+                                    <constraint firstItem="cFh-st-ZrH" firstAttribute="top" secondItem="P56-1c-JHr" secondAttribute="top" constant="9" id="tp1-7i-id1"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rCX-pY-sHv" customClass="NMAMapView">
+                                <rect key="frame" x="0.0" y="72" width="375" height="588"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="588" id="yqs-q1-ynq"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="P56-1c-JHr" firstAttribute="width" secondItem="QqF-xr-RQj" secondAttribute="width" id="1IZ-ho-XPc"/>
+                            <constraint firstItem="rCX-pY-sHv" firstAttribute="width" secondItem="QqF-xr-RQj" secondAttribute="width" id="8Jk-dk-cfX"/>
+                            <constraint firstItem="WJn-SD-m8u" firstAttribute="trailing" secondItem="P56-1c-JHr" secondAttribute="trailing" id="Ayc-cm-QyQ"/>
+                            <constraint firstItem="rCX-pY-sHv" firstAttribute="centerX" secondItem="P56-1c-JHr" secondAttribute="centerX" id="EuV-vB-aLH"/>
+                            <constraint firstItem="P56-1c-JHr" firstAttribute="leading" secondItem="WJn-SD-m8u" secondAttribute="leading" id="FHG-af-Uhh"/>
+                            <constraint firstItem="P56-1c-JHr" firstAttribute="top" secondItem="WJn-SD-m8u" secondAttribute="top" id="IfC-SU-HUA"/>
+                            <constraint firstItem="rCX-pY-sHv" firstAttribute="top" secondItem="P56-1c-JHr" secondAttribute="bottom" id="pHg-ZG-SoY"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="WJn-SD-m8u"/>
                     </view>
                     <connections>

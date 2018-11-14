@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		77122F7221989D56001AA065 /* Group 5.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 77122F7121989D56001AA065 /* Group 5.1.png */; };
-		77122F752198A517001AA065 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77122F742198A517001AA065 /* MapViewController.m */; };
+		77122F752198A517001AA065 /* MNMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77122F742198A517001AA065 /* MNMapViewController.m */; };
+		77122F782198B904001AA065 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77122F762198B903001AA065 /* Main.storyboard */; };
+		771405FA2199A532002FE02E /* MNPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 771405F92199A532002FE02E /* MNPosition.m */; };
+		77206E24219A6E39008918B3 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 77206E23219A6E39008918B3 /* location.png */; };
 		77FC2E76219746F100B5F4AA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC2E75219746F100B5F4AA /* AppDelegate.m */; };
 		77FC2E79219746F100B5F4AA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC2E78219746F100B5F4AA /* ViewController.m */; };
-		77FC2E7C219746F100B5F4AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77FC2E7A219746F100B5F4AA /* Main.storyboard */; };
 		77FC2E7E219746F100B5F4AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77FC2E7D219746F100B5F4AA /* Assets.xcassets */; };
 		77FC2E81219746F100B5F4AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77FC2E7F219746F100B5F4AA /* LaunchScreen.storyboard */; };
 		77FC2E84219746F100B5F4AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC2E83219746F100B5F4AA /* main.m */; };
@@ -25,14 +27,17 @@
 		21AE9355BF3D801CD2CB4AA0 /* Pods-App4-Driver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App4-Driver.release.xcconfig"; path = "Pods/Target Support Files/Pods-App4-Driver/Pods-App4-Driver.release.xcconfig"; sourceTree = "<group>"; };
 		616194F9FA20927BBE7DD99E /* libPods-App4-Driver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-App4-Driver.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		77122F7121989D56001AA065 /* Group 5.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 5.1.png"; sourceTree = "<group>"; };
-		77122F732198A517001AA065 /* MapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
-		77122F742198A517001AA065 /* MapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		77122F732198A517001AA065 /* MNMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MNMapViewController.h; sourceTree = "<group>"; };
+		77122F742198A517001AA065 /* MNMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNMapViewController.m; sourceTree = "<group>"; };
+		77122F772198B903001AA065 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		771405F82199A532002FE02E /* MNPosition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MNPosition.h; sourceTree = "<group>"; };
+		771405F92199A532002FE02E /* MNPosition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNPosition.m; sourceTree = "<group>"; };
+		77206E23219A6E39008918B3 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
 		77FC2E71219746F100B5F4AA /* App4-Driver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "App4-Driver.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		77FC2E74219746F100B5F4AA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		77FC2E75219746F100B5F4AA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		77FC2E77219746F100B5F4AA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		77FC2E78219746F100B5F4AA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		77FC2E7B219746F100B5F4AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		77FC2E7D219746F100B5F4AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		77FC2E80219746F100B5F4AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		77FC2E82219746F100B5F4AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +75,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		771405FB2199A537002FE02E /* core */ = {
+			isa = PBXGroup;
+			children = (
+				771405F82199A532002FE02E /* MNPosition.h */,
+				771405F92199A532002FE02E /* MNPosition.m */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
 		77FC2E68219746F100B5F4AA = {
 			isa = PBXGroup;
 			children = (
@@ -91,18 +105,19 @@
 		77FC2E73219746F100B5F4AA /* App4-Driver */ = {
 			isa = PBXGroup;
 			children = (
+				771405FB2199A537002FE02E /* core */,
 				77FC2E8C219764EA00B5F4AA /* image */,
 				77FC2E74219746F100B5F4AA /* AppDelegate.h */,
 				77FC2E75219746F100B5F4AA /* AppDelegate.m */,
 				77FC2E77219746F100B5F4AA /* ViewController.h */,
 				77FC2E78219746F100B5F4AA /* ViewController.m */,
-				77FC2E7A219746F100B5F4AA /* Main.storyboard */,
+				77122F732198A517001AA065 /* MNMapViewController.h */,
+				77122F742198A517001AA065 /* MNMapViewController.m */,
+				77122F762198B903001AA065 /* Main.storyboard */,
 				77FC2E7D219746F100B5F4AA /* Assets.xcassets */,
 				77FC2E7F219746F100B5F4AA /* LaunchScreen.storyboard */,
 				77FC2E82219746F100B5F4AA /* Info.plist */,
 				77FC2E83219746F100B5F4AA /* main.m */,
-				77122F732198A517001AA065 /* MapViewController.h */,
-				77122F742198A517001AA065 /* MapViewController.m */,
 			);
 			path = "App4-Driver";
 			sourceTree = "<group>";
@@ -110,6 +125,7 @@
 		77FC2E8C219764EA00B5F4AA /* image */ = {
 			isa = PBXGroup;
 			children = (
+				77206E23219A6E39008918B3 /* location.png */,
 				77FC2E8E2197650000B5F4AA /* Group 4.png */,
 				77FC2E8D2197650000B5F4AA /* Group 7.png */,
 				77122F7121989D56001AA065 /* Group 5.1.png */,
@@ -179,9 +195,10 @@
 				77FC2E81219746F100B5F4AA /* LaunchScreen.storyboard in Resources */,
 				77122F7221989D56001AA065 /* Group 5.1.png in Resources */,
 				77FC2E7E219746F100B5F4AA /* Assets.xcassets in Resources */,
+				77122F782198B904001AA065 /* Main.storyboard in Resources */,
+				77206E24219A6E39008918B3 /* location.png in Resources */,
 				77FC2E902197650000B5F4AA /* Group 4.png in Resources */,
 				77FC2E8F2197650000B5F4AA /* Group 7.png in Resources */,
-				77FC2E7C219746F100B5F4AA /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,17 +259,18 @@
 				77FC2E79219746F100B5F4AA /* ViewController.m in Sources */,
 				77FC2E84219746F100B5F4AA /* main.m in Sources */,
 				77FC2E76219746F100B5F4AA /* AppDelegate.m in Sources */,
-				77122F752198A517001AA065 /* MapViewController.m in Sources */,
+				771405FA2199A532002FE02E /* MNPosition.m in Sources */,
+				77122F752198A517001AA065 /* MNMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		77FC2E7A219746F100B5F4AA /* Main.storyboard */ = {
+		77122F762198B903001AA065 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				77FC2E7B219746F100B5F4AA /* Base */,
+				77122F772198B903001AA065 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -386,6 +404,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9MZJYX7X34;
 				INFOPLIST_FILE = "App4-Driver/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -403,6 +422,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9MZJYX7X34;
 				INFOPLIST_FILE = "App4-Driver/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

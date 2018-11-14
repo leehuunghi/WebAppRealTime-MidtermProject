@@ -95,7 +95,7 @@ NS_SWIFT_NAME(init(location:));
  *
  * @note Will be `NMAGeoPositionUnknownValue` if unknown.
  */
-@property (nonatomic, readonly) double altitudeAccuracy;
+@property (nonatomic, readonly) double altitudec;
 
 /**
  * The movement speed of the position.

@@ -7,11 +7,12 @@
 //
 
 #import "ViewController.h"
+#import <UIKit/UIKit.h>
 #import <NMAKit/NMAKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MapViewController : ViewController
+@interface MNMapViewController : ViewController
 
 @end
 
