@@ -12,6 +12,7 @@ import 'here-js-api/scripts/mapsjs-clustering';
 
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
+
 Vue.config.productionTip = false
 
 import VueSSE from 'vue-sse';
