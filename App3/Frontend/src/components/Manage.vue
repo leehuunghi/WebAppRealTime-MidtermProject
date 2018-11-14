@@ -14,7 +14,7 @@
                 <div class="col-md-3">TRẠNG THÁI</div>
             </div>
             <ul>
-            <li v-for="item in requests" :key="item.id" class="row tableRow" id="row1">
+            <li v-for="item in requests" :key="item.id" class="row tableRow" id="row1" v-on:click="DetailMap()">
                 <div class="col-md-1">#{{item.ID}}</div>
                 <div class="col-md-3">{{item.name}}</div>
                 <div class="col-md-3">{{item.address}}</div>
@@ -27,18 +27,18 @@
         </div>
     </div>
 
-    <HereMap v-if="detail"
+    <!-- <router-view v-if="detail" :to="{ name: 'MapRouter' }" /> -->
+    <!-- <HereMap v-if="detail"
             appId="SxxR970XbZjWq11DxSea"
             appCode="ZIgTe3WyzSsHXAsKjPBljg"
             lat="10.762622"
             lng="106.660172"
             width="100%"
-            height="835px" />
+            height="835px" /> -->
 </div>
 </template>
 
 <script>
-import HereMap from "./MapRouter";
 import io from 'socket.io-client';
 
 var socket = require('socket.io-client')('http://192.168.1.13:3030');
@@ -50,9 +50,6 @@ export default {
       detail: false
     };
   },
-  components: {
-    HereMap
-  },
   created() {
       var self = this;
       socket.on('connect', function(){});
@@ -61,6 +58,12 @@ export default {
        });
        socket.emit('loadAllRequestBooking', '');
   },
+  methods:{
+      DetailMap(){
+        this.$emit("mapRouter", true);
+        this.$router.replace({ name: "MapRouter" });
+      }
+  }
 };
 </script>
 
