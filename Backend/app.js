@@ -7,7 +7,7 @@ var bookingBikeCtrl = require('./apiControllers/bookingBikeCtrl');
 var employeeCtrl = require('./apiControllers/employeeCtrl');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
-
+var events = require('./event/events');
 app = express();
 
 app.use(morgan('dev')); 
@@ -21,7 +21,7 @@ app.use(cors());
 //     })
 //     res.statusCode = 200;
 // })
-
+app.get('/api/a/', events.subscribeRequestBooking);
 app.use('/api/employee/', employeeCtrl);
 app.use('/api/bookingBike/', verifyAccessToken, bookingBikeCtrl);
 

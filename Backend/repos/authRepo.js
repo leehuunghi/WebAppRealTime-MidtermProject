@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken'),
     db = require('../fn/mysql-db');
 
 const SECRET = 'ABCDEF';
-const AC_LIFETIME = 600;
+const AC_LIFETIME = 120000;
 
 exports.generateAccessToken = userEntity => {
     var payload = {

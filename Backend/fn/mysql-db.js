@@ -18,9 +18,8 @@ exports.load = sql => {
             if (err) {
             	reject(err);
             } else {
-            	resolve(rows);
+                resolve(rows);  
             }
-
             cn.end();
         });
     });

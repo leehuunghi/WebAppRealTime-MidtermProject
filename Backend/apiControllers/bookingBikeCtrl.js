@@ -1,16 +1,15 @@
 var http = require('http'),
-    express = require('express'),
-    socketIO = require('socket.io');
-
+    express = require('express');
 var router = express.Router();
+var moment = require('moment');
+var haversine = require('haversine');
 
-var server = http.Server(express());
-var io = socketIO(server);
 var events = require('../event/events');
+var socket = require('socket.io-client')('http://localhost:3030');
 
 var bookingBikeRepo = require('../repos/bookingBikeRepo');
 
-router.get('/loadAllRequestBooking', () => {
+router.get('/loadAllRequestBooking', (req, res) => {
     bookingBikeRepo.loadAll().then(values => {
         res.statusCode = 200;
         res.json({
@@ -24,13 +23,40 @@ router.get('/loadAllRequestBooking', () => {
 
 router.get('/requestBookingEvent', events.subscribeRequestBooking);
 
+router.post('/verifyRequestBooking', (req, res) => {
+    var location = {
+        ID: req.body.ID,
+        lat: req.body.lat,
+        lng: req.body.lng,
+        status: 'verify'
+    }
+    bookingBikeRepo.updateLocationGuest(location).then(() => {
+        socket.emit('finishIdentifyLocation', {
+            ID: location.ID,
+            lat: location.lat,
+            lng: location.lng
+        });
+
+        res.statusCode = 201;
+        res.json({
+            msg: "verify success!"
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.end('View error log on console');    
+    })
+})
+
 router.post('/book', (req, res) => {
     bookingBikeRepo.add(req.body).then(value => {
+        bookingBikeRepo.loadBookingBikeById(value.insertId).then(bookingBike => {
+            events.publishRequestBooking(bookingBike);
+        })
         res.statusCode = 201;
         res.json({
             success: 1
         });
-        events.publishCategoryBooking(req.body);
     })
     .catch(err => {
         console.log(err);

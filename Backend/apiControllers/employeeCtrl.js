@@ -13,7 +13,9 @@ router.post('/login', (req, res) => {
     console.log('hello');
     console.log(req.body);
     employeeRepo.login(req.body).then(rows => {
+        console.log(3);
         if (rows.length > 0) {
+            console.log(4);
             var loginEntity = rows[0];
             var acToken = authRepo.generateAccessToken(loginEntity);
             var rfToken = authRepo.generateRefreshToken();
@@ -27,6 +29,7 @@ router.post('/login', (req, res) => {
                 })
             })
             .catch(err => {
+                console.log(1);
                 console.log(err);
                 res.status = 500;
                 res.end('View error log on console');
@@ -38,6 +41,7 @@ router.post('/login', (req, res) => {
         }
     })
     .catch(err => {
+        console.log(1);
         console.log(err);
         res.status = 500;
         res.end('View error log on console');
