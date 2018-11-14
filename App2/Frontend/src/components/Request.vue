@@ -27,7 +27,7 @@ export default {
   created() {
     var self = this;
     axios
-      .get("http://192.168.1.13:3000/api/bookingBike/loadAllRequestBooking", {
+      .get("http://172.16.1.34:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
           "x-access-token": this.$session.get("access_token")
         }
@@ -40,7 +40,7 @@ export default {
       });
   },
   mounted() {
-    this.$sse("http://192.168.1.13:3000/api/a", { format: "json" })
+    this.$sse("http://172.16.1.34:3000/api/a", { format: "json" })
       .then(sse => {
         sse.subscribe("REQUEST_BOOKING", response => {
           this.requests.push(response[0]);
