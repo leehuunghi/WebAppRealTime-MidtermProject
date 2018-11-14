@@ -7,12 +7,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900" rel="stylesheet">
     <link href="res/css/layout.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <title>Document</title>
 </head>
 
 <body style="height: 100%;">
+    <div id="modal" class="modal-backdrop" style="background-color: rgba(0,0,0,0.25); display: none;">
+        <div class="modal" role="dialog" style="display: block; padding-top: 200px;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px;">
+                    <div>
+                        <h5 class="mdTitle">Lỗi đăng nhập</h5>
+                    </div>
+                    <div class="mdDes">
+                        <p>Tên đăng nhập hoặc mật khẩu không đúng.</p>
+                    </div>
+                    <div style="text-align: right">
+                        <button id="tryAgain" type="button" class="mdBtn">Nhập lại</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div style="height: 60%;">
         <div class="view img-responsive cover">
             <div class="view img-responsive avatar-identifier">
@@ -22,17 +40,67 @@
     </div>
     <div class="content blueText center" style="margin-top: -60px;">
         <div class="tit">Đăng nhập để tiếp tục</div>
-        <form style="margin-top: 20px;">
+        <form id="signin" style="margin-top: 20px;" action="identifier-main.html" method="POST">
             <p for="username" class="inputTit" style="margin-left: -160px;">TÊN ĐĂNG NHẬP</p>
             <input id="username" type="text" placeholder="Nhập tên đăng nhập" style="width: 330px;">
             <p for="username" class="inputTit" style="margin-left: -205px; margin-top: 20px">MẬT KHẨU</p>
-            <input id="username" type="password" placeholder="Nhập mật khẩu" style="width: 330px; margin-right: 20px; margin-left: 70px;">
-            <button class="submitBtn"><img src="res/icons/next.png"></button>
+            <input id="password" type="password" placeholder="Nhập mật khẩu" style="width: 330px; margin-right: 20px; margin-left: 70px;">
+            <button type="button" id="submitBtn" value="send" class="submitBtn"><img src="res/icons/next.png"></button>
         </form>
     </div>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script>
+        $("#submitBtn").click(function () {
+            if ($("#username").val() == "") {
+                $("#username").addClass("redBorder");
+                $("#username").addClass("errorPH");
+                $("#username").attr("placeholder", "Vui lòng nhập tên đăng nhập");
+            }
+            if ($("#password").val() == "") {
+                $("#password").addClass("redBorder");
+                $("#password").addClass("errorPH");
+                $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
+            }
+            else {
+                // $("#signin").submit();
+                $("#modal").fadeIn("fast");
+            }
+        })
+
+        $("#username").focusout(function () {
+            if ($("#username").val() == "") {
+                $("#username").addClass("redBorder");
+                $("#username").addClass("errorPH");
+                $("#username").attr("placeholder", "Vui lòng nhập tên đăng nhập");
+            }
+        })
+
+        $("#password").focusout(function () {
+            if ($("#password").val() == "") {
+                $("#password").addClass("redBorder");
+                $("#password").addClass("errorPH");
+                $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
+            }
+        })
+
+        $("#username").click(function () {
+            $("#username").removeClass("redBorder");
+            $("#username").removeClass("errorPH");
+            $("#username").attr("placeholder", "");
+        })
+
+        $("#password").click(function () {
+            $("#password").removeClass("redBorder");
+            $("#password").removeClass("errorPH");
+            $("#password").attr("placeholder", "");
+        })
+
+        $("#tryAgain").click(function () {
+            $("#modal").fadeOut("fast");
+        })
+    </script>
 
 </body>
 
