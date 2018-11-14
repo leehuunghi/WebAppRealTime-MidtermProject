@@ -285,3 +285,11 @@ input::placeholder {
     background-color: #0FA9D6;
     border: 1px solid #0FA9D6;
 }
+
+.redBorder{
+    border: 1px solid #ff0000;
+}
+
+.errorPH::-webkit-input-placeholder {
+    color: #ff0000;
+}
