@@ -2,7 +2,7 @@
 <div>
     <ul>
         <li v-for="item in requests" :key="item.id" style=" list-style-type: none;">
-            <div class="row" id="item" v-on:click="Indentify(item.id, item.address, item.note)">
+            <div class="row" id="item" v-on:click="Indentify(item.ID, item.address, item.note)">
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                    #{{item.ID}}
                 </div>

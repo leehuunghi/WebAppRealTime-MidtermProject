@@ -7,7 +7,7 @@
           <p>{{NoteCustomer}}</p>
     </div>
      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-          <button>Xác nhận</button>
+          <button v-on:click="Located()">Xác nhận</button>
     </div>
     <div>
           {{coord.lat}}-{{coord.lng}}
@@ -18,7 +18,7 @@
 
 <script>
 import axios from "axios";
-
+var selfID;
 export default {
   name: "HereMap",
   data() {
@@ -31,7 +31,8 @@ export default {
       NoteCustomer: "",
       View: [],
       marker: "",
-      icon: ""
+      icon: "",
+      idClick: ""
     };
   },
   props: {
@@ -50,6 +51,8 @@ export default {
 
     //reveive address data
     EventBus.$on("sendId", (id, _address, _note) => {
+      this.idClick = id;
+
       this.AddressCustomer = _address;
       this.NoteCustomer = _note;
       var self = this;
@@ -79,6 +82,12 @@ export default {
 
               self.coord.lat = _lat;
               self.coord.lng = _lng;
+
+              this.$session.set("ID", {
+                ID: id,
+                lat: _lat,
+                lng: _lng
+              });
 
               if (this.marker) {
                 this.map.removeObject(this.marker);
@@ -110,11 +119,18 @@ export default {
                     self.coord = target.getPosition();
                   }
                   //get address from coordinates
-                  urlGetAddressFromCoord = `https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=${self.coord.lat},${self.coord.lng},250&mode=retrieveAddresses&maxresults=1&gen=9&app_id=${self.appId}&app_code=${self.appCode}`;
+                  urlGetAddressFromCoord = `https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox=${
+                    self.coord.lat
+                  },${
+                    self.coord.lng
+                  },250&mode=retrieveAddresses&maxresults=1&gen=9&app_id=${
+                    self.appId
+                  }&app_code=${self.appCode}`;
                   axios
                     .get(urlGetAddressFromCoord)
                     .then(responseAddress => {
-                     self.AddressCustomer = responseAddress.data.Response.View[0].Result[0].Location.Address.Label;
+                      self.AddressCustomer =
+                        responseAddress.data.Response.View[0].Result[0].Location.Address.Label;
                     })
                     .catch(err => {
                       alert(err);
@@ -158,6 +174,26 @@ export default {
     );
     this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
     this.useMetricMeasurements(this.map, this.defaultLayers);
+  },
+  methods: {
+    Located: function() {
+      axios
+        .post(
+          "http://172.16.1.34:3000/api/bookingBike/verifyRequestBooking",
+          this.$session.get("ID"),
+          {
+            headers: {
+              "x-access-token": this.$session.get("access_token")
+            }
+          }
+        )
+        .then(response => {
+          alert(JSON.stringify(response));
+        })
+        .catch(err => {
+          alert(err);
+        });
+    }
   }
 };
 </script>
