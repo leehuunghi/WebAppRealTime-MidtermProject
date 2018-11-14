@@ -233,7 +233,11 @@ input::placeholder {
 
 .mdTitle{
     font-size: 18px;
-    margin-bottom: 20px;
+}
+
+.mdDes{
+    font-size: 14px;
+    color: #888888;
 }
 
 .mdInfo-tit{
