@@ -1,5 +1,7 @@
 <template>
- <div class="content blueText center" style="margin-top: -60px;">
+ <div style="height: 100%;">
+   <img src="/static/pics/backgroundapp2.png" alt="" class="cover">
+   <div class="content blueText center" >
         <div class="tit">Đăng nhập để tiếp tục</div>
          <form action="" method="POST" v-on:submit.prevent="sendLogin" style="margin-top: 20px;"> 
             <p for="username" class="inputTit" style="margin-left: -160px;">TÊN ĐĂNG NHẬP</p>
@@ -8,12 +10,14 @@
             <input id="password" type="password" placeholder="Nhập mật khẩu" v-model="formdata.password" style="width: 330px; margin-right: 20px; margin-left: 70px;">
             <button class="submitBtn" type="submit"><img src="/static/icons/next.png"></button>
         </form>
+   </div>
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import md5 from "crypto-md5";
+
 export default {
   data() {
     return {
@@ -31,7 +35,7 @@ export default {
       var passmd5 = md5($("#password").val());
       this.formdata.password = passmd5;
       axios
-        .post("http://192.168.1.13:3000/api/employee/login", this.formdata)
+        .post("http://172.16.1.91:3000/api/employee/login", this.formdata)
         .then(response => {
           alert(response.data.auth);
           if (response.data.auth) {

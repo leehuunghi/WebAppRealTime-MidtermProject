@@ -11,13 +11,8 @@ html, body{
 }
 
 .cover{
-    background-image: url('../pics/cover.png');
-    background-repeat: no-repeat;
     width: 100%;
-    height: auto 100%;
-    text-align: center;
-    background-size: 100%;
-    background-position: center bottom;
+    height: 320px;
 }
 
 .avatar-receiver{

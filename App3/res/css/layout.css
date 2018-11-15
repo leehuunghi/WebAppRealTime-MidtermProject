@@ -11,13 +11,14 @@ html, body{
 }
 
 .cover{
-    background-image: url('../pics/cover.png');
-    background-repeat: no-repeat;
+    background-size: 300px;
     width: 100%;
-    height: auto 100%;
-    text-align: center;
-    background-size: 100%;
-    background-position: center bottom;
+    height: auto 50%;
+}
+
+.form{
+    margin-bottom: 100px;
+    margin-top: 50px;
 }
 
 .avatar-receiver{
@@ -35,8 +36,8 @@ html, body{
 }
 
 .avatar-manager{
-    background: url('../pics/manager.png') no-repeat;
-    background-size: 300px; 
+    position: absolute;
+    z-index: 1;
     width: auto;
     height: auto 50%;
 }
