@@ -30,22 +30,27 @@ router.post('/verifyRequestBooking', (req, res) => {
         lng: req.body.lng,
         status: 'verify'
     }
-    bookingBikeRepo.updateLocationGuest(location).then(() => {
-        socket.emit('finishIdentifyLocation', {
-            ID: location.ID,
-            lat: location.lat,
-            lng: location.lng
-        });
+    socket.emit('updateStatusBookingEvent', {
+        ID: location.ID,
+        status: location.status
+    });
 
-        res.statusCode = 201;
-        res.json({
-            msg: "verify success!"
-        });
-    })
-    .catch(err => {
-        console.log(err);
-        res.end('View error log on console');    
-    })
+    // bookingBikeRepo.updateLocationGuest(location).then(() => {
+    //     socket.emit('verifyRequestBookingEvent', {
+    //         ID: location.ID,
+    //         lat: location.lat,
+    //         lng: location.lng
+    //     });
+
+    //     res.statusCode = 201;
+    //     res.json({
+    //         msg: "verify success!"
+    //     });
+    // })
+    // .catch(err => {
+    //     console.log(err);
+    //     res.end('View error log on console');    
+    // })
 })
 
 router.post('/book', (req, res) => {

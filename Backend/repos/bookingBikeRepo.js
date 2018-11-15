@@ -17,9 +17,13 @@ exports.lastInsertId = () => {
     return db.load(sql);
 }
 
+exports.updateStatusBooking = object => {
+    var sql = `UPDATE BookingBike SET status = ${object.status} where ID = ${object.ID}`;
+    return db.load(sql);
+}
+
 exports.updateLocationGuest = location => {
     var sql = `UPDATE BookingBike SET guest_lat = ${location.lat}, guest_lng = ${location.lng}, status = '${location.status}' where ID = ${location.ID}`;
-    console.log(sql);
     return db.load(sql);
 }
 
