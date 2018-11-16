@@ -19,13 +19,12 @@
 		77FC2E84219746F100B5F4AA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC2E83219746F100B5F4AA /* main.m */; };
 		77FC2E8F2197650000B5F4AA /* Group 7.png in Resources */ = {isa = PBXBuildFile; fileRef = 77FC2E8D2197650000B5F4AA /* Group 7.png */; };
 		77FC2E902197650000B5F4AA /* Group 4.png in Resources */ = {isa = PBXBuildFile; fileRef = 77FC2E8E2197650000B5F4AA /* Group 4.png */; };
-		E49EB790C195231C86D4BF06 /* libPods-App4-Driver.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 616194F9FA20927BBE7DD99E /* libPods-App4-Driver.a */; };
+		C257B6C50E5F2559CCE5C26F /* Pods_App4_Driver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 950417B946C73C9B452A5BA9 /* Pods_App4_Driver.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		016D34C41C1BA289DB965854 /* Pods-App4-Driver.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App4-Driver.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App4-Driver/Pods-App4-Driver.debug.xcconfig"; sourceTree = "<group>"; };
 		21AE9355BF3D801CD2CB4AA0 /* Pods-App4-Driver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App4-Driver.release.xcconfig"; path = "Pods/Target Support Files/Pods-App4-Driver/Pods-App4-Driver.release.xcconfig"; sourceTree = "<group>"; };
-		616194F9FA20927BBE7DD99E /* libPods-App4-Driver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-App4-Driver.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		77122F7121989D56001AA065 /* Group 5.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 5.1.png"; sourceTree = "<group>"; };
 		77122F732198A517001AA065 /* MNMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MNMapViewController.h; sourceTree = "<group>"; };
 		77122F742198A517001AA065 /* MNMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNMapViewController.m; sourceTree = "<group>"; };
@@ -44,6 +43,7 @@
 		77FC2E83219746F100B5F4AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		77FC2E8D2197650000B5F4AA /* Group 7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 7.png"; sourceTree = "<group>"; };
 		77FC2E8E2197650000B5F4AA /* Group 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 4.png"; sourceTree = "<group>"; };
+		950417B946C73C9B452A5BA9 /* Pods_App4_Driver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App4_Driver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E49EB790C195231C86D4BF06 /* libPods-App4-Driver.a in Frameworks */,
+				C257B6C50E5F2559CCE5C26F /* Pods_App4_Driver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 		174FF2683449723C0A5EB405 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				616194F9FA20927BBE7DD99E /* libPods-App4-Driver.a */,
+				950417B946C73C9B452A5BA9 /* Pods_App4_Driver.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -237,12 +237,16 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-App4-Driver/Pods-App4-Driver-frameworks.sh",
 				"${PODS_ROOT}/HEREMapsStarter/framework/NMAKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
+				"${BUILT_PRODUCTS_DIR}/StarscreamSocketIO/StarscreamSocketIO.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NMAKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StarscreamSocketIO.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -290,6 +294,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -321,6 +326,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -349,6 +355,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -380,6 +387,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

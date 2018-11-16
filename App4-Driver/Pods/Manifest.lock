@@ -1,16 +1,24 @@
 PODS:
   - HEREMapsStarter (3.9.0)
+  - Socket.IO-Client-Swift (11.1.3):
+    - StarscreamSocketIO (~> 8.0.5)
+  - StarscreamSocketIO (8.0.7)
 
 DEPENDENCIES:
   - HEREMapsStarter
+  - Socket.IO-Client-Swift (~> 11.1.2)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - HEREMapsStarter
+    - Socket.IO-Client-Swift
+    - StarscreamSocketIO
 
 SPEC CHECKSUMS:
   HEREMapsStarter: 57f26af1eb7ecc97c4dd5ac83cfe3615503b4fe2
+  Socket.IO-Client-Swift: b8e59ddc16bc3609ca2f49a4b50253f095d535c8
+  StarscreamSocketIO: 00b54e4208481ca5cef089545353aaf126bae16d
 
-PODFILE CHECKSUM: 56b3d5f3fca11d1a2c299f08ca3e514d9c04285c
+PODFILE CHECKSUM: dc8c7d32c4f0712a1909d45055f3a7eb8efbe376
 
 COCOAPODS: 1.5.3

@@ -1,0 +1,6 @@
+framework module Pods_App4_Driver {
+  umbrella header "Pods-App4-Driver-umbrella.h"
+
+  export *
+  module * { export * }
+}
