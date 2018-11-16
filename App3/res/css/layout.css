@@ -110,6 +110,7 @@ input::placeholder {
 
 
 .logoutBtn{
+    margin: 15px;
     height: 35px;
     border: 2px solid #0FA9D6;
     background: none;
@@ -119,6 +120,7 @@ input::placeholder {
     padding: 0 30px;
     border-radius: 50px;
     cursor: pointer;
+    text-transform: uppercase;
 }
 
 .logoutBtn:hover{
@@ -297,4 +299,9 @@ input::placeholder {
 
 .errorPH::-webkit-input-placeholder {
     color: #ff0000;
+}
+
+.coverBg{
+    background-color: #0BB1E1;
+    position: relative;
 }
