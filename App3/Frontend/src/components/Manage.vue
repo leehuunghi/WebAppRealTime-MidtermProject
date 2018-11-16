@@ -9,13 +9,13 @@
         <div class="i-am-centered" style="margin-top: 20px; margin-bottom: 50px;">
             <div class="row tableTitle" id="title">
                 <div class="col-md-1">ID</div>
-                <div class="col-md-3">HÀNH KHÁCH</div>
+                <div class="col-md-2">HÀNH KHÁCH</div>
                 <div class="col-md-3">ĐỊA CHỈ</div>
                 <div class="col-md-2">THỜI GIAN ĐẶT</div>
-                <div class="col-md-3">TRẠNG THÁI</div>
+                <div class="col-md-2">TRẠNG THÁI</div>
             </div>
             <ul>
-            <li v-for="item in requests" :key="item.id" class="row tableRow" id="row1" v-on:click="DetailMap()">
+            <li v-for="item in requests" :key="item.id" class="row tableRow" id="row1">
                 <div class="col-md-1">#{{item.ID}}</div>
                 <div class="col-md-2">{{item.name}}</div>
                 <div class="col-md-3">{{item.address}}</div>
@@ -28,31 +28,35 @@
                            {{item.driverID}}
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1" v-on:click="DetailMap(item)">
                     <button class="shortestWay" style="float: right;">
-                        <img src="res/icons/shortest-way.png">
+                        <img src="/static/icons/shortest-way.png">
                     </button>
                 </div>
             </li>
             </ul>
         </div>
     </div>
+
+    
 </div>
 </template>
 
 <script>
 import io from 'socket.io-client';
 
-var socket = require('socket.io-client')('http://172.16.1.91:3030');
+var socket = require('socket.io-client')('http://172.16.1.32:3030');
 
 export default {
+    name: "Manage",
   data() {
     return {
       requests: [],
       detail: false
     };
   },
-  created() {
+  mounted() {
+    //   alert(1);
       var self = this;
       socket.on('connect', function(){});
        socket.on('loadAllRequestBookingEvent', function(data){
@@ -61,9 +65,11 @@ export default {
        socket.emit('loadAllRequestBooking', '');
   },
   methods:{
-      DetailMap(){
+      DetailMap(item){
+        this.$session.set("Request", item);
         this.$emit("mapRouter", true);
         this.$router.replace({ name: "MapRouter" });
+        
       }
   }
 };

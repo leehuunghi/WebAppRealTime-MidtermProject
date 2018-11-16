@@ -35,7 +35,7 @@ export default {
       var passmd5 = md5($("#password").val());
       this.formdata.password = passmd5;
       axios
-        .post("http://172.16.1.91:3000/api/employee/login", this.formdata)
+        .post("http://172.16.1.32:3000/api/employee/login", this.formdata)
         .then(response => {
           alert(response.data.auth);
           if (response.data.auth) {

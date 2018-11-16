@@ -10,10 +10,14 @@ import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/scripts/mapsjs-clustering';
 
+
+window.EventBus = new Vue();
+
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 
 Vue.config.productionTip = false
+
 
 /* eslint-disable no-new */
 new Vue({
