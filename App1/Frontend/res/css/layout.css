@@ -97,6 +97,7 @@ input::placeholder {
 
 
 .logoutBtn{
+    margin: 15px;
     height: 35px;
     border: 2px solid #0FA9D6;
     background: none;
