@@ -119,17 +119,27 @@ export default {
         }
 
         var infoDriver =
-        "<h3>Khách hàng</h3>" +
-        response[0].displayName +
-        "  #" +
-        response[0].ID +
-        "</br>" +
-        response[0].phone;
-        alert(infoDriver);
-      self.bubbleDriver = new H.ui.InfoBubble(this.coordDriver, {
-        content: infoDriver
-      });
-      alert("xong");
+          "<h3>Tài xế</h3>" +
+          response[0].displayName +
+          "  #" +
+          response[0].ID +
+          "</br>" +
+          response[0].phone;
+        self.bubbleDriver = new H.ui.InfoBubble(self.coordDriver, {
+          content: infoDriver
+        });
+
+        
+    self.markerDriver.addEventListener(
+      "pointerdown",
+      function(evt) {
+        self.bubbleDriver.close();
+        self.bubbleDriver.open();
+        // show info bubble
+        self.ui.addBubble(self.bubbleDriver);
+      },
+      false
+    );
       });
     });
   },
@@ -169,7 +179,6 @@ export default {
     this.markerGuest.addEventListener(
       "pointerdown",
       function(evt) {
-        self.ui.getBubbles().forEach(bub => self.ui.removeBubble(bub));
         self.bubbleGuest.close();
         self.bubbleGuest.open();
         // show info bubble
@@ -178,18 +187,6 @@ export default {
       false
     );
 
-     this.markerDriver.addEventListener(
-      "pointerdown",
-      function(evt) {
-        alert(1);
-        self.ui.getBubbles().forEach(bub => self.ui.removeBubble(bub));
-        self.bubbleDriver.close();
-        self.bubbleDriver.open();
-        // show info bubble
-        self.ui.addBubble(self.bubbleDriver);
-      },
-      false
-    );
   },
   methods: {
     Back() {
