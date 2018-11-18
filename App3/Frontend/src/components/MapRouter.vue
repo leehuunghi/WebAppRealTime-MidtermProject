@@ -24,7 +24,7 @@
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://172.16.1.32:3030");
+var socket = require("socket.io-client")("http://172.16.1.35:3030");
 
 export default {
   name: "MapRouter",
@@ -35,18 +35,18 @@ export default {
       coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
       platform: {},
-      AddressCustomer: "",
-      NoteCustomer: "",
       View: [],
       markerGuest: "",
       markerDriver: "",
       iconGuest: "",
       iconDriver: "",
-      // group: []
+      infoBubbles: "",
+      group: [],
+      ui: {},
+      InfoGuest: "",
+      bubbleGuest: "",
+      bubbleDriver: ""
     };
-  },
-  props: {
-    ID: String
   },
   created() {
     this.platform = new H.service.Platform({
@@ -61,14 +61,15 @@ export default {
     this.iconDriver = new H.map.Icon("/static/icons/marker.png");
 
     //Information guest
-    var request = this.$session.get("Request");
+    this.InfoGuest = this.$session.get("Request");
 
-    socket.emit("getInfoDriverByDriverID", request.driverID);
+    socket.emit("getInfoDriverByDriverID", this.InfoGuest.driverID);
 
     //set coordinates marker guest
-    this.coordGuest.lat = request.guest_lat;
-    this.coordGuest.lng = request.guest_lng;
+    this.coordGuest.lat = this.InfoGuest.guest_lat;
+    this.coordGuest.lng = this.InfoGuest.guest_lng;
 
+    //get information driver
     socket.on("connect", function() {});
     socket.on("getInfoDriverByDriverIDEvent", function(response) {
       _lat = response[0].lat;
@@ -78,7 +79,6 @@ export default {
       self.markerDriver = new H.map.Marker(self.coordDriver, {
         icon: self.iconDriver
       });
-      self.markerDriver.setData("Driver nè");
       self.map.addObject(self.markerDriver);
       self.map.setCenter(self.coordDriver);
 
@@ -116,9 +116,20 @@ export default {
 
           // Set the map's viewport to make the whole route visible:
           self.map.setViewBounds(routeLine.getBounds());
-
-         
         }
+
+        var infoDriver =
+        "<h3>Khách hàng</h3>" +
+        response[0].displayName +
+        "  #" +
+        response[0].ID +
+        "</br>" +
+        response[0].phone;
+        alert(infoDriver);
+      self.bubbleDriver = new H.ui.InfoBubble(this.coordDriver, {
+        content: infoDriver
+      });
+      alert("xong");
       });
     });
   },
@@ -129,8 +140,6 @@ export default {
     this.map = new H.Map(this.$refs.map, defaultLayers.normal.map, {
       zoom: 13
     });
-    // this.group = new H.map.Group();
-    // this.map.addObject(this.group);
 
     this.behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(this.map)
@@ -139,32 +148,48 @@ export default {
     this.markerGuest = new H.map.Marker(this.coordGuest, {
       icon: this.iconGuest
     });
-    this.markerGuest.setData("User nè");
 
     this.map.setCenter(this.coordGuest);
     this.map.addObject(this.markerGuest);
 
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
-    this.useMetricMeasurements(this.map, defaultLayers);
 
-    //  this.group.addObject(this.markerGuest);
-    //   this.group.addObject(this.markerDriver);
-    //       alert(JSON.stringify(this.group));
-    //       this.group.addEventListener(
-    //         "tap",
-    //         function(evt) {
-    //           alert(1);
-    //           // event target is the marker itself, group is a parent event target
-    //           // for all objects that it contains
-    //           var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
-    //             // read custom data
-    //             content: evt.target.getData()
-    //           });
-    //           // show info bubble
-    //           this.ui.addBubble(bubble);
-    //         },
-    //         false
-    //       );
+    var infoGuest =
+      "<h3>Khách hàng</h3>" +
+      this.InfoGuest.name +
+      "  #" +
+      this.InfoGuest.ID +
+      "</br>" +
+      this.InfoGuest.address;
+    this.bubbleGuest = new H.ui.InfoBubble(this.coordGuest, {
+      content: infoGuest
+    });
+
+    var self = this;
+    this.markerGuest.addEventListener(
+      "pointerdown",
+      function(evt) {
+        self.ui.getBubbles().forEach(bub => self.ui.removeBubble(bub));
+        self.bubbleGuest.close();
+        self.bubbleGuest.open();
+        // show info bubble
+        self.ui.addBubble(self.bubbleGuest);
+      },
+      false
+    );
+
+     this.markerDriver.addEventListener(
+      "pointerdown",
+      function(evt) {
+        alert(1);
+        self.ui.getBubbles().forEach(bub => self.ui.removeBubble(bub));
+        self.bubbleDriver.close();
+        self.bubbleDriver.open();
+        // show info bubble
+        self.ui.addBubble(self.bubbleDriver);
+      },
+      false
+    );
   },
   methods: {
     Back() {

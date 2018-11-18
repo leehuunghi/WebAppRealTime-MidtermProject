@@ -45,7 +45,7 @@
 <script>
 import io from 'socket.io-client';
 
-var socket = require('socket.io-client')('http://172.16.1.32:3030');
+var socket = require('socket.io-client')('http://172.16.1.35:3030');
 
 export default {
     name: "Manage",
