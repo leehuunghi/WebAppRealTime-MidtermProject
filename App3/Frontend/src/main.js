@@ -10,11 +10,18 @@ import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/scripts/mapsjs-clustering';
 
+// import moment from 'moment-timezone'
+ 
+// Vue.use(VueMoment, {
+//     // moment,
+// })
+
 
 window.EventBus = new Vue();
 
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
+
 
 Vue.config.productionTip = false
 

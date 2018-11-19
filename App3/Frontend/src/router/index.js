@@ -16,17 +16,17 @@ export default new Router({
       }
   },
     {
-      path: '/login',
+      path: 'login',
       name: 'FormLogin',
       component: FormLogin
     },
     {
-      path: 'manage',
+      path: '/manage',
       name: 'Manage',
       component: Manage
     },
     {
-      path: 'map-router',
+      path: '/map-router',
       name: 'MapRouter',
       component: MapRouter
     }

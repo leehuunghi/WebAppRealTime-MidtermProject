@@ -24,7 +24,7 @@
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://172.16.1.35:3030");
+var socket = require("socket.io-client")("http://192.168.1.10:3030");
 
 export default {
   name: "MapRouter",
@@ -191,7 +191,7 @@ export default {
   methods: {
     Back() {
       this.$emit("mapRouter", false);
-      this.$router.replace({ name: "MapRouter" });
+      this.$router.replace({ name: "Manage" });
     }
   }
 };

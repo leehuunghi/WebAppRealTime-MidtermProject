@@ -148,7 +148,6 @@ input::placeholder {
     font-size: 14px;
     font-weight: 700;
     color: #0FA9D6;
-    text-align: center;
 }
 
 .tableRow{
@@ -209,4 +208,46 @@ input::placeholder {
     color: #fff;
     text-align: center;
     margin-top: 8px;
+}
+
+#modal{
+    position: relative;
+    z-index: 100;
+}
+
+.modalCnt{
+    background-color: #fff;
+    margin: 100px;
+}
+
+.mdTitle{
+    font-size: 18px;
+}
+
+.mdDes{
+    font-size: 14px;
+    color: #888888;
+}
+
+.mdInfo-tit{
+    font-size: 14px;
+    color: #ccc;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.mdInfo-Cnt{
+    font-size: 18px;
+    color: #000;
+}
+
+.mdBtn{
+    font-size: 14px;
+    color: #0FA9D6;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    text-align: right;
+    cursor: pointer;
 }

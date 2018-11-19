@@ -10,7 +10,8 @@
 export default {
   data:{
     name: 'App',
-    authenticated: false,
+    authenticated: true,
     mapRouter: false,
-  }
+  },
 }
+</script>

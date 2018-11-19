@@ -35,7 +35,7 @@ export default {
       var passmd5 = md5($("#password").val());
       this.formdata.password = passmd5;
       axios
-        .post("http://172.16.1.35:3000/api/employee/login", this.formdata)
+        .post("http://192.168.1.10:3000/api/employee/login", this.formdata)
         .then(response => {
           alert(response.data.auth);
           if (response.data.auth) {
@@ -44,7 +44,8 @@ export default {
             this.refresh_token = response.data.refresh_token;
             this.$session.set("access_token", response.data.access_token);
             this.$session.set("refresh_token", response.data.refresh_token);
-            this.$emit("authenticated", true);
+            this.$session.set("authenticated", true);
+            // this.$emit("authenticated", true);
             this.$router.replace({ name: "Manage" });
           } else {
           }
