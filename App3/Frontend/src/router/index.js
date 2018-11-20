@@ -11,12 +11,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: {
-          name: "FormLogin"
-      }
+      // redirect: {
+      //     name: "FormLogin"
+      // }
   },
     {
-      path: 'login',
+      path: '/login',
       name: 'FormLogin',
       component: FormLogin
     },

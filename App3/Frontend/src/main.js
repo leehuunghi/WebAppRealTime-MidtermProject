@@ -17,6 +17,11 @@ import 'here-js-api/scripts/mapsjs-clustering';
 // })
 
 
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage)
+
+
 window.EventBus = new Vue();
 
 import VueSessionStorage from 'vue-sessionstorage'

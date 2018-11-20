@@ -1,9 +1,6 @@
 <template>
 <div>
      <img src="/static/pics/backgroundapp2.png" alt="" class="cover">
-    <div style="position: absolute; top: 20px; right: 20px;">
-        <button class="logoutBtn">ĐĂNG XUẤT</button>
-    </div>
     <div class="content blueText center" style="margin-top: -60px;">
         <div class="tit">Danh sách các request</div>
         <div class="i-am-centered" style="margin-top: 20px; margin-bottom: 50px;">
@@ -83,8 +80,9 @@
 <script>
 import io from "socket.io-client";
 import VueMoment from "moment";
+import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.1.10:3030");
+var socket = require("socket.io-client")("http://172.16.1.21:3030");
 socket.on("connect", function() {});
 
 export default {
@@ -99,11 +97,21 @@ export default {
   },
   created() {
     var self = this;
-
-    socket.on("loadAllRequestBookingEvent", function(data) {
-      self.requests = data;
-    });
-    socket.emit("loadAllRequestBooking", "");
+    axios
+      .get("http://172.16.1.21:3000/api/bookingBike/loadAllRequestBooking", {
+        headers: {
+          "x-access-token": this.$localStorage.get("access-token")
+        }
+      })
+      .then(data => {
+          alert(JSON.stringify(data));
+        for (let index = 0; index < data.length; index++) {
+          data[index].time = VueMoment.unix(data[index].time).format(
+            "DD/MM/YYYY HH:mm"
+          );
+        }
+        self.requests = data;
+      });
   },
   mounted() {
     var self = this;
@@ -123,6 +131,7 @@ export default {
 
     //receive new request
     socket.on("addNewRequestBookingEvent", function(data) {
+      data.time = VueMoment.unix(data.time).format("DD/MM/YYYY HH:mm");
       self.requests.unshift(data);
     });
   },
@@ -140,11 +149,7 @@ export default {
     requests: {
       handler: _newRequests => {
         // _newRequests = _newRequests.reverse();
-        for (let index = 0; index < _newRequests.length; index++) {
-          _newRequests[index].time = VueMoment.unix(
-            _newRequests[index].time
-          ).format("DD/MM/YYYY HH:mm");
-        }
+
         // alert(JSON.stringify(_newRequests));
         requests = _newRequests;
       },
