@@ -12,22 +12,23 @@ var driverRepo = require('../repos/driverRepo');
 var haversine = require('haversine')
 
 io.on('connection', socket => {
-    console.log('Nha vo');
+    console.log("a user " + socket.id);
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
 
-    socket.on('loadAllRequestBooking', () => {
-        bookingBikeRepo.loadAll().then(values => {
-            socket.emit("loadAllRequestBookingEvent", values);
-        }).catch(err => {
-            console.log(err);
-        })
+    socket.on('updateStatusBookingEvent', msg => {
+        io.sockets.emit('updateStatusBookingEvent', msg);
+    })
+
+    socket.on('addNewRequestBooking', msg => {
+        console.log(msg);
+        io.sockets.emit('addNewRequestBookingEvent', msg[0]);
     })
 
     socket.on('finishIdentifyLocation', guest => {
-        
+        io.sockets.emit("updateStatusBookingEvent", guest);
         bookingBikeRepo.loadAllLocationDriver().then(drivers => {
             if (drivers.length > 0) {
                 var min;
@@ -54,14 +55,24 @@ io.on('connection', socket => {
             console.log(err);
             res.end();
         })
+
     });
+
+    socket.on('getInfoDriverByDriverID', driverID => {
+        driverRepo.getInfoDriverByDriverID(driverID).then(value => {
+            socket.emit('getInfoDriverByDriverIDEvent', value);
+        }).catch(err => {
+            console.log(err);
+        })
+    })
+
     socket.on('error', err => {
         console.log(err);
     })
 });
 
 server.listen(3030, () => {
-    console.log("Socket listen port 3030!");
+    console.log("Socket identify location listen port 3030!");
 });
 
 module.exports = router;

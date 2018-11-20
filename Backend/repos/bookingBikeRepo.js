@@ -8,7 +8,7 @@ exports.add = bookingBikeEntity => {
 }
 
 exports.loadAll = () => {
-    var sql = `select * from BookingBike`;
+    var sql = `select * from BookingBike order by ID DESC`;
     return db.load(sql);
 }
 
@@ -34,5 +34,10 @@ exports.loadBookingBikeById = id => {
 
 exports.loadAllLocationDriver = () => {
     var sql = `select ID, lat, lng from BookingBike where status = 'READY'`;
+    return db.load(sql);
+}
+
+exports.updateStatusDriver = object => {
+    var sql = `update Driver set status = ${object.status} where ID = ${object.ID}`;
     return db.load(sql);
 }

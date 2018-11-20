@@ -26,3 +26,13 @@ exports.loadAllPositionDriverReady = driverEntity => {
     var sql = `select ID, lat, lng from Driver where status = 'READY'`;
     return db.load(sql);
 }
+
+exports.getInfoDriverByDriverID = id => {
+    var sql = `select * from Driver where ID = ${id}`;
+    return db.load(sql);
+}
+
+exports.updatePositionDriver = driverEntity => {
+    var sql = `update Driver set lat = ${driverEntity.lat}, lng = ${driverEntity.lng} where username = ${driverEntity.username}`;
+    return db.insert(sql);
+}

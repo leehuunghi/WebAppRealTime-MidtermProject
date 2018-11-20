@@ -9,7 +9,10 @@ router.post('/signUp', (req, res) => {
     
 })
 
+
+
 router.post('/login', (req, res) => {
+    console.log(req.body);
     employeeRepo.login(req.body).then(rows => {
         if (rows.length > 0) {
             var loginEntity = rows[0];
@@ -18,7 +21,7 @@ router.post('/login', (req, res) => {
 
             authRepo.updateRefreshToken(loginEntity.ID, rfToken).then(value => {
                 res.json({
-                    auth: true,
+                    auth: 1,
                     access_token: acToken,
                     refresh_token: rfToken
                 })
@@ -30,7 +33,8 @@ router.post('/login', (req, res) => {
             })
         } else {
             res.json({
-                auth: false
+                auth: 0,
+                msg: 'tài khoản hoặc mật khẩu không đúng'
             })
         }
     })
