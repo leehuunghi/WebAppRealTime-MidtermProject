@@ -44,8 +44,7 @@ export default {
             this.refresh_token = response.data.refresh_token;
             this.$localStorage.set("access_token", response.data.access_token);
             this.$localStorage.set("refresh_token", response.data.refresh_token);
-            // this.$localStorage.set("authenticated", true);
-            // this.$emit("authenticated", true);
+            EventBus.$emit("authenticated", true);
             this.$router.replace({ name: "Manage" });
           } else {
           }

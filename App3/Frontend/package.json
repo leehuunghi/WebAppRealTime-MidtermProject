@@ -16,13 +16,15 @@
     "moment": "^2.22.2",
     "socket.io-client": "^2.1.1",
     "uiv": "^0.28.0",
+    "v-switch-case": "^1.0.1",
     "vue": "^2.5.2",
     "vue-event-bus": "^1.0.2",
     "vue-localstorage": "^0.6.2",
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
     "vue-sessionstorage": "^1.0.0",
-    "vue-sse": "^1.0.2"
+    "vue-sse": "^1.0.2",
+    "vuejs-logger": "^1.5.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

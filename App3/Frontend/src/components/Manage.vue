@@ -1,6 +1,9 @@
 <template>
 <div>
      <img src="/static/pics/backgroundapp2.png" alt="" class="cover">
+     <div style="position: absolute; top: 20px; right: 20px;" v-on:click="LogOut()">
+        <button class="logoutBtn">ĐĂNG XUẤT</button>
+    </div>
     <div class="content blueText center" style="margin-top: -60px;">
         <div class="tit">Danh sách các request</div>
         <div class="i-am-centered" style="margin-top: 20px; margin-bottom: 50px;">
@@ -18,8 +21,13 @@
                 <div class="col-md-2">{{item.name}}</div>
                 <div class="col-md-3">{{item.address}}</div>
                 <div class="col-md-2">{{item.time}}</div>
-                <div class="col-md-2 notLocated">
-                    {{item.status}}
+                <div class="col-md-2 notLocated" v-switch="item.status">
+                   <div v-case="'waiting'">Chưa được định vị</div>
+                   <div v-case="'verify'">Đã định vị xong</div>
+                   <div v-case="'hasBike'">Đã có xe nhận</div>
+                   <div v-case="'moving'">Đang di chuyển</div>
+                   <div v-case="'complete'">Đã hoàn thành</div>
+
                 </div>
                 <div v-if="item.driverID != null" class="col-md-1" id="driverid" style="color: #888; cursor: pointer;" 
                         v-on:click="isShow = true,  InfoDriver(item.driverID)">
@@ -81,12 +89,18 @@
 import io from "socket.io-client";
 import VueMoment from "moment";
 import axios from "axios";
+import { vSwitch, vCase, vDefault } from 'v-switch-case'
 
 var socket = require("socket.io-client")("http://172.16.1.21:3030");
 socket.on("connect", function() {});
 
 export default {
   name: "Manage",
+  directives: {
+    'switch': vSwitch,
+    'case': vCase,
+    'default': vDefault
+  },
   data() {
     return {
       requests: [],
@@ -97,20 +111,28 @@ export default {
   },
   created() {
     var self = this;
+    var access_token = this.$localStorage.get("access_token");
     axios
       .get("http://172.16.1.21:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
-          "x-access-token": this.$localStorage.get("access-token")
+          "x-access-token": access_token
         }
       })
       .then(data => {
-          alert(JSON.stringify(data));
-        for (let index = 0; index < data.length; index++) {
-          data[index].time = VueMoment.unix(data[index].time).format(
-            "DD/MM/YYYY HH:mm"
-          );
+        for (
+          let index = 0;
+          index < data.data.listRequestBooking.length;
+          index++
+        ) {
+          var item = data.data.listRequestBooking[index];
+          data.data.listRequestBooking[index].time = VueMoment.unix(
+            item.time
+          ).format("DD/MM/YYYY HH:mm");
         }
-        self.requests = data;
+        self.requests = data.data.listRequestBooking;
+      })
+      .catch(err => {
+        alert(err);
       });
   },
   mounted() {
@@ -121,6 +143,7 @@ export default {
       for (let index = 0; index < self.requests.length; index++) {
         if (self.requests[index].ID == data.ID) {
           self.requests[index].status = data.status;
+          self.requests[index].driverID = data.driverID;
         }
       }
     });
@@ -143,17 +166,16 @@ export default {
     },
     InfoDriver(driverID) {
       socket.emit("getInfoDriverByDriverID", driverID);
+    },
+    LogOut() {
+      this.$localStorage.remove("access-token");
+      this.$localStorage.remove("refresh-token");
+      this.$router.replace({ name: "FormLogin" });
     }
   },
   watch: {
-    requests: {
-      handler: _newRequests => {
-        // _newRequests = _newRequests.reverse();
-
-        // alert(JSON.stringify(_newRequests));
-        requests = _newRequests;
-      },
-      deep: true
+    requests: _newRequests => {
+        this.requests = _newRequests;
     }
   }
 };
