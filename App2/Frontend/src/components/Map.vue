@@ -1,18 +1,29 @@
 <template>
-  <div class="row here-map">
-    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-          <input v-model="AddressCustomer"/>
-    </div>
-    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-          <p>{{NoteCustomer}}</p>
-    </div>
-     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-          <button v-on:click="Located()">Xác nhận</button>
-    </div>
-    <div>
-          {{coord.lat}}-{{coord.lng}}
-    </div>
-      <div ref="map" v-bind:style="{ width: width, height: height }" id="map"></div>
+  <div class="here-map">
+
+                <div class="info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="colTit">
+                                Địa chỉ
+                            </div>
+                            <input v-model="AddressCustomer"/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="colTit">
+                                Ghi chú
+                            </div>
+                           
+                            <p>{{NoteCustomer}}</p>
+                            
+                        </div>
+                        <div class="col-md-2" style="text-align: right;">
+                            <button class="locateBtn"  v-on:click="Located()">Định vị</button>
+                        </div>
+                    </div>
+                </div>
+         
+      <div class="center" ref="map" v-bind:style="{ width: width, height: height }" id="map"></div>
   </div>
 </template>
 
@@ -179,7 +190,7 @@ export default {
     Located: function() {
       axios
         .post(
-          "http://172.16.1.34:3000/api/bookingBike/verifyRequestBooking",
+          "http://172.16.1.21:3000/api/bookingBike/verifyRequestBooking",
           this.$session.get("ID"),
           {
             headers: {
@@ -198,12 +209,3 @@ export default {
 };
 </script>
 
-<style>
-p {
-  width: 80%;
-  margin: 10px;
-  border-style: solid;
-  border-radius: 5px;
-  border-color: black;
-}
-</style>
