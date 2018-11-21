@@ -36,3 +36,8 @@ exports.updatePositionDriver = driverEntity => {
     var sql = `update Driver set lat = ${driverEntity.lat}, lng = ${driverEntity.lng} where username = ${driverEntity.username}`;
     return db.insert(sql);
 }
+
+exports.updateStatusDriver = driverEntity => {
+    var sql = `update Driver set status = ${driverEntity.status} where username = ${driverEntity.username}`;
+    return db.insert(sql);
+}

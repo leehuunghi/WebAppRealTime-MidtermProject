@@ -5,7 +5,7 @@ var driverRepo = require('../repos/driverRepo');
 var router = express.Router();
 
 
-router.post('/updateLocation', (req, res) => {
+router.post('/updateLocationDriver', (req, res) => {
     driverRepo.updatePositionDriver(req.body).then(() => {
         res.status = 200;
         res.json = {
@@ -19,6 +19,30 @@ router.post('/updateLocation', (req, res) => {
     })
 })
 
+router.post('/updateStatusDriver', (req, res) => {
+    driverRepo.updateStatusDriver(req.body).then(() => {
+        res.status = 200;
+        res.json = {
+            msg: 'insert success'
+        }
+    }).catch(err => {
+        res.status = 401;
+        res.json = {
+            msg: 'insert failed'
+        }
+    })
+})
+
+router.post('/getInfoDriverByDriverID', (req, res) => {
+    driverRepo.getInfoDriverByDriverID(req.body.ID).then(value => {
+        res.status = 200;
+        res.json = {
+            driverInfo: value[0]
+        }
+    }).catch(err => {
+        console.log(err);
+    })
+})
 
 
 module.exports = router;
