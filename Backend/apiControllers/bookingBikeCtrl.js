@@ -6,8 +6,22 @@ var haversine = require('haversine');
 
 var events = require('../event/events');
 var socket = require('socket.io-client')('http://localhost:3030');
+var socketDriver = require('socket.io-client')('http://localhost:1412');
 
 var bookingBikeRepo = require('../repos/bookingBikeRepo');
+
+
+router.get('/loadAllRequestBookingWaiting', (req, res) => {
+    bookingBikeRepo.loadAllRequestBookingWaiting().then(values => {
+        res.statusCode = 200;
+        res.json({
+            listRequestBooking: values
+        });
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+    })
+})
 
 router.get('/loadAllRequestBooking', (req, res) => {
     bookingBikeRepo.loadAll().then(values => {
@@ -35,13 +49,11 @@ router.post('/verifyRequestBooking', (req, res) => {
         status: location.status
     });
 
-    bookingBikeRepo.updateLocationGuest(location).then(() => {
-        // socket.emit('verifyRequestBookingEvent', {
-        //     ID: location.ID,
-        //     lat: location.lat,
-        //     lng: location.lng
-        // });
+    socketDriver.emit('hasRequestBooking', {
+        guest: location
+    })
 
+    bookingBikeRepo.updateLocationGuest(location).then(() => {
         res.statusCode = 201;
         res.json({
             msg: "verify success!"
