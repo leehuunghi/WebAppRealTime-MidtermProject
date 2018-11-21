@@ -1,45 +1,43 @@
 <template>
 <div>
-    <p id="titleForm">Nhập thông tin hành khách</p>
-  <form action="" method="POST" v-on:submit.prevent="sendinfo">
-            <div class="row">
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    <div class="form-group">
-                        <label>HỌ TÊN</label>
-                        <input type="text" name="name" class="form-control" v-model="formdata.name" id="hoten"
-                            placeholder="Trần Văn A">
-                    </div>
-                    <div class="form-group">
-                        <label>SỐ ĐIỆN THOẠI</label>
-                        <input type="text" name="phone" class="form-control" v-model="formdata.phone" id="sdt" placeholder="01234567xx">
-                    </div>
-                </div>
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    <div class="form-group">
-                        <label>ĐỊA CHỈ ĐÓN</label>
-                        <input type="text" name="adress" class="form-control" v-model="formdata.address" id="diachi"
-                            placeholder="227 Nguyễn Văn Cừ, P4, Q5">
-                    </div>
-                    <div class="form-group">
-                        <label>GHI CHÚ</label>
-                        <input type="text" name="note" class="form-control" v-model="formdata.note" id="ghichu"
-                            placeholder="Đón ở cổng...">
-                    </div>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <button type="submit" id="btnSubmit">
-                        <img src="/static/image/right-arrow.png" id="imgSubmit">
-                    </button>
-                </div>
-            </div>
-
-        </form>
+   <div class="coverBg">
+        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;">
+            <button class="logoutBtn">ĐĂNG XUẤT<Table></Table></button>
+        </div>
+        <img id="cover" src="/static/pics/cover-receiver.png" style="width: 100%; height: auto; opacity: 1; margin-bottom: 0px;">
     </div>
+    <div class="container">
+        <div class="content blueText center" style="margin-top: -60px;">
+            <div class="tit">Nhập thông tin hành khách</div>
+            <form style="margin: 20px 50px 0 150px;" action="" method="POST" v-on:submit.prevent="sendinfo">
+                <div class="row">
+                    <div class="col-md-5">
+                        <p for="username" class="inputTit" style="margin-left: -230px;">HỌ TÊN</p>
+                        <input id="username" type="text" style="width: 330px;" name="name" class="form-control" v-model="formdata.name"
+                            placeholder="Trần Văn A">
+                        <p for="username" class="inputTit" style="margin-left: -190px; margin-top: 20px">ĐỊA CHỈ ĐÓN</p>
+                        <input id="username" type="text" name="adress" class="form-control" v-model="formdata.address"
+                            placeholder="227 Nguyễn Văn Cừ, P4, Q5" style="width: 330px;"> 
+                    </div>
+                    <div class="col-md-5">
+                        <p for="username" class="inputTit" style="margin-left: -170px;">SỐ ĐIỆN THOẠI</p>
+                        <input id="username" type="text" name="phone" class="form-control" v-model="formdata.phone" placeholder="01234567xx" style="width: 330px;">
+                        <p for="username" class="inputTit" style="margin-left: -225px; margin-top: 20px">GHI CHÚ</p>
+                        <input id="username" type="text" name="note" class="form-control" v-model="formdata.note"
+                            placeholder="Đón ở cổng..." style="width: 330px;">
+                    </div>
+                    <div class="col-md-1">
+                        <button class="submitBtn" style="margin-top: 122px; margin-left: -20px"><img src="/static/icons/next.png"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
 import axios from "axios";
-import token from "@/components/FormLogin"
 
 export default {
   data() {
@@ -53,19 +51,16 @@ export default {
   methods: {
     sendinfo() {
       axios
-        .post("http://172.16.0.254:3000/api/bookingBike/book", this.formdata, {
+        .post("http://192.168.1.10:3000/api/bookingBike/book", this.formdata, {
             headers: {
                 'x-access-token':  this.$session.get('access_token')
             }
         })
         .then(response => {
-          console.log(response);
           if (response.data.success > 0) {
-            this.message = "You send information success";
-            this.success = response.data.success;
+              alert("Send info success");
           } else {
-            this.message = "You send information fail";
-            this.success = response.data.success;
+            alert("Send info fail");
           }
         })
         .catch(err => {
