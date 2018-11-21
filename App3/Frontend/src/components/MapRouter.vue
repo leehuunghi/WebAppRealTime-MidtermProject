@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-   <div ref="map" style="width: 100%; height: 520px"></div>
+   <div ref="map" style="width: 100%; height: 600px;"></div>
 </div>
 </template>
 
@@ -24,7 +24,7 @@
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.0.93:3030");
+var socket = require("socket.io-client")("http://192.168.1.11:3030");
 
 export default {
   name: "MapRouter",
@@ -57,8 +57,8 @@ export default {
     var _lat, _lng;
 
     var self = this;
-    this.iconGuest = new H.map.Icon("/static/icons/marker.png");
-    this.iconDriver = new H.map.Icon("/static/icons/marker.png");
+    this.iconGuest = new H.map.Icon("/static/icons/marker-passenger.png");
+    this.iconDriver = new H.map.Icon("/static/icons/marker-driver.png");
 
     //Information guest
     this.InfoGuest = this.$session.get("Request");
@@ -108,7 +108,7 @@ export default {
 
           // Create a polyline to display the route:
           var routeLine = new H.map.Polyline(linestring, {
-            style: { strokeColor: "blue", lineWidth: 10 }
+            style: { strokeColor: "#0FA9D6", lineWidth: 10 }
           });
 
           // Add the route polyline and the two markers to the map:
@@ -119,27 +119,27 @@ export default {
         }
 
         var infoDriver =
-          "<h3>Tài xế</h3>" +
-          response[0].displayName +
-          "  #" +
+          "<head><link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900' rel='stylesheet'><body></head><div style='font-family: Montserrat; padding: 10px;'><p style='font-weight: 700; font-size:14px; opacity: 0.75; text-transform: uppercase;'>Tài xế</p><span style='font-weight: 700; font-size: 12px;'>#" +
           response[0].ID +
-          "</br>" +
-          response[0].phone;
+          "</span><br>" +
+          response[0].displayName +
+          "</br><span style='font-size: 14px; opacity: 0.8;'>" +
+          response[0].phone +
+          "</span></body></div>";
         self.bubbleDriver = new H.ui.InfoBubble(self.coordDriver, {
           content: infoDriver
         });
 
-        
-    self.markerDriver.addEventListener(
-      "pointerdown",
-      function(evt) {
-        self.bubbleDriver.close();
-        self.bubbleDriver.open();
-        // show info bubble
-        self.ui.addBubble(self.bubbleDriver);
-      },
-      false
-    );
+        self.markerDriver.addEventListener(
+          "pointerdown",
+          function(evt) {
+            self.bubbleDriver.close();
+            self.bubbleDriver.open();
+            // show info bubble
+            self.ui.addBubble(self.bubbleDriver);
+          },
+          false
+        );
       });
     });
   },
@@ -165,12 +165,13 @@ export default {
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
 
     var infoGuest =
-      "<h3>Khách hàng</h3>" +
-      this.InfoGuest.name +
-      "  #" +
-      this.InfoGuest.ID +
-      "</br>" +
-      this.InfoGuest.address;
+    "<head><link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900' rel='stylesheet'><body></head><div style='font-family: Montserrat; padding: 10px;'><p style='font-weight: 700; font-size:14px; opacity: 0.75; text-transform: uppercase;'>Khách</p><span style='font-weight: 700; font-size: 12px;'>#" +
+          this.InfoGuest.ID +
+          "</span><br>" +
+          this.InfoGuest.name +
+          "</br><span style='font-size: 14px; opacity: 0.8;'>" +
+          this.InfoGuest.address +
+          "</span></body></div>";
     this.bubbleGuest = new H.ui.InfoBubble(this.coordGuest, {
       content: infoGuest
     });
@@ -186,7 +187,6 @@ export default {
       },
       false
     );
-
   },
   methods: {
     Back() {

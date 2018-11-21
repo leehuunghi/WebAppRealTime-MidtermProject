@@ -58,7 +58,7 @@ html, body{
 }
 
 .tit{
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 900;
 }
 
@@ -95,6 +95,11 @@ input::placeholder {
     box-shadow: 0 10px 30px rgba(15,169,214,0.5);
 }
 
+.submitBtn:disabled, .submitBtn[disabled]{
+    background-image: linear-gradient(#666, #666);
+    pointer-events: none;
+}
+
 .submitBtn-r{
     height: 50px;
     width: 50px;
@@ -125,6 +130,27 @@ input::placeholder {
     box-shadow: 0 5px 30px rgba(15,169,214,0.35);
 }
 
+.logoutBtn{
+    margin: 15px;
+    height: 35px;
+    border: 2px solid #0FA9D6;
+    background: none;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0FA9D6;;
+    padding: 0 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.logoutBtn:hover{
+    border: 2px solid #fff;
+    background: #fff;
+    box-shadow: 0 5px 30px rgba(15,169,214,0.35);
+}
+
+
 .logoutBtn-r{
     height: 35px;
     border: 2px solid #fff;
@@ -135,6 +161,7 @@ input::placeholder {
     padding: 0 30px;
     border-radius: 50px;
     margin-top: 8px;
+    cursor: pointer;
 }
 
 .logoutBtn-r:hover{
@@ -146,13 +173,19 @@ input::placeholder {
 .navbar{
     background-color: #0BB1E1;
     height: 80px;
-    display: block;
 }
 
 .tableTitle{
     font-size: 14px;
     font-weight: 700;
+    border: 0px;
+    border-radius: 37px;
+    padding: 15px;
+    text-align: left !important;
+    margin-top: 10px;
     color: #0FA9D6;
+    height: 52px;
+    list-style-type: none;
 }
 
 .tableRow{
@@ -169,7 +202,7 @@ input::placeholder {
 }
 
 .notLocated{
-    color: #FF3C3C !important;
+    color: #0094FF !important;
 }
 
 .located{
@@ -217,7 +250,12 @@ input::placeholder {
 
 #modal{
     position: relative;
-    z-index: 100;
+    z-index: 99999;
+}
+
+.modal{
+    box-shadow: 0px 0px 20px #000;
+    z-index: 99999;
 }
 
 .modalCnt{
@@ -263,4 +301,22 @@ input::placeholder {
 
 .errorPH::-webkit-input-placeholder {
     color: #ff0000;
+}
+
+.coverBg{
+    background-color: #0BB1E1;
+    position: relative;
+}
+
+.driverIDBtn{
+    width: 50px !important;
+    height: 50px !important;
+    padding: 10px;
+    border-radius: 25px;
+    box-shadow: 0px 2.5px 10px rgba(0,0,0,0.25);
+}
+
+.driverIDBtn:hover{
+    box-shadow: 0px 5px 30px rgba(15,169,214,0.5);
+    color: #0BB1E1;
 }

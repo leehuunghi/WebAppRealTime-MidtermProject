@@ -19,7 +19,7 @@ export default {
 
     if (access_token != null) {
       axios
-        .post("http://192.168.0.93:3000/api/me", "", {
+        .post("http://192.168.1.11:3000/api/me", "", {
           headers: {
             "x-access-token": access_token
           }
@@ -34,7 +34,7 @@ export default {
             // alert(refresh_token);
             // axios
             //   .post(
-            //     "http://192.168.0.93:3000/api/updateAccessToken",
+            //     "http://192.168.1.11:3000/api/updateAccessToken",
             //     {refresh_token}
             //   )
             //   .then(newAccessToken => {

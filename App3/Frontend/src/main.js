@@ -9,8 +9,6 @@ import 'here-js-api/scripts/mapsjs-service';
 import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/scripts/mapsjs-clustering';
-window.$ = require('jquery')
-window.JQuery = require('jquery')
 
 // import moment from 'moment-timezone'
  
@@ -23,6 +21,11 @@ import VueLocalStorage from 'vue-localstorage'
 
 Vue.use(VueLocalStorage)
 
+Vue.use({
+  install: function(Vue, options){
+      Vue.prototype.$jQuery = require('jquery'); // you'll have this.$jQuery anywhere in your vue project
+  }
+})
 
 window.EventBus = new Vue({  
   data(){
