@@ -1,7 +1,7 @@
 <template>
  <div style="height: 100%;">
-   <img src="/static/pics/backgroundapp2.png" alt="" class="cover">
-   <div class="content blueText center" >
+    <img src="/static/pics/cover-manager.png" style="width: 100%; height: auto;">
+   <div class="content blueText center margin" style="margin-top: -50px;">
         <div class="tit">Đăng nhập để tiếp tục</div>
          <form action="" method="POST" v-on:submit.prevent="sendLogin" style="margin-top: 20px;"> 
             <p for="username" class="inputTit" style="margin-left: -160px;">TÊN ĐĂNG NHẬP</p>
@@ -32,6 +32,35 @@
 </template>
 
 <script>
+        $("#username").focusout(function () {
+            if ($("#username").val() == "") {
+                $("#username").addClass("redBorder");
+                $("#username").addClass("errorPH");
+                $("#username").attr("placeholder", "Vui lòng nhập tên đăng nhập");
+            }
+        })
+
+        $("#password").focusout(function () {
+            if ($("#password").val() == "") {
+                $("#password").addClass("redBorder");
+                $("#password").addClass("errorPH");
+                $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
+            }
+        })
+
+        $("#username").click(function () {
+            $("#username").removeClass("redBorder");
+            $("#username").removeClass("errorPH");
+            $("#username").attr("placeholder", "");
+        })
+
+        $("#password").click(function () {
+            $("#password").removeClass("redBorder");
+            $("#password").removeClass("errorPH");
+            $("#password").attr("placeholder", "");
+        })
+
+
 import axios from "axios";
 import md5 from "crypto-md5";
 
@@ -53,7 +82,7 @@ export default {
       var passmd5 = md5($("#password").val());
       this.formdata.password = passmd5;
       axios
-        .post("http://172.16.1.21:3000/api/employee/login", this.formdata)
+        .post("http://192.168.0.93:3000/api/employee/login", this.formdata)
         .then(response => {
           if (response.data.auth) {
             this.auth = response.data.auth;

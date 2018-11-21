@@ -91,7 +91,7 @@ import VueMoment from "moment";
 import axios from "axios";
 import { vSwitch, vCase, vDefault } from 'v-switch-case'
 
-var socket = require("socket.io-client")("http://172.16.1.21:3030");
+var socket = require("socket.io-client")("http://192.168.0.93:3030");
 socket.on("connect", function() {});
 
 export default {
@@ -113,7 +113,7 @@ export default {
     var self = this;
     var access_token = this.$localStorage.get("access_token");
     axios
-      .get("http://172.16.1.21:3000/api/bookingBike/loadAllRequestBooking", {
+      .get("http://192.168.0.93:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
           "x-access-token": access_token
         }

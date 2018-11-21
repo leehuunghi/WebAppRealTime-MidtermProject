@@ -15,6 +15,11 @@ html, body{
     height: 90%;
 }
 
+.form{
+    margin-bottom: 100px;
+    margin-top: 50px;
+}
+
 .avatar-receiver{
     background: url('../pics/receiver.png') no-repeat;
     background-size: 300px; 
@@ -250,4 +255,12 @@ input::placeholder {
     border: none;
     text-align: right;
     cursor: pointer;
+}
+
+.redBorder{
+    border: 1px solid #ff0000;
+}
+
+.errorPH::-webkit-input-placeholder {
+    color: #ff0000;
 }
