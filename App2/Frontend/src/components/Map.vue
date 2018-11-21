@@ -7,18 +7,25 @@
                             <div class="colTit">
                                 Địa chỉ
                             </div>
-                            <input v-model="AddressCustomer"/>
+                            <input type="text" v-model="AddressCustomer" v-on:keyup="keymonitor" id="address">
+                            <div id="listAddressSuggest">
+                                <div v-for="item in suggests" :key="item.id">
+                                
+                                  <div v-on:click="ChangeAddress(item.label)">{{item.label}}</div>      
+                                  
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="colTit">
                                 Ghi chú
                             </div>
                            
-                            <p>{{NoteCustomer}}</p>
+                            <p id="note">{{NoteCustomer}}</p>
                             
                         </div>
                         <div class="col-md-2" style="text-align: right;">
-                            <button class="locateBtn"  v-on:click="Located()">Định vị</button>
+                            <button class="locateBtn"  v-on:click="Located(IDCustomer)">Định vị</button>
                         </div>
                     </div>
                 </div>
@@ -29,6 +36,7 @@
 
 <script>
 import axios from "axios";
+import { ModelSelect } from "vue-search-select";
 var selfID;
 export default {
   name: "HereMap",
@@ -40,10 +48,12 @@ export default {
       platform: {},
       AddressCustomer: "",
       NoteCustomer: "",
+      IDCustomer: "",
       View: [],
       marker: "",
       icon: "",
-      idClick: ""
+      ui: {},
+      suggests: []
     };
   },
   props: {
@@ -62,18 +72,36 @@ export default {
 
     //reveive address data
     EventBus.$on("sendId", (id, _address, _note) => {
-      this.idClick = id;
 
+      this.IDCustomer = id;
       this.AddressCustomer = _address;
       this.NoteCustomer = _note;
       var self = this;
       var _lat, _lng, suggestAddress, urlGetAddress, urlGetAddressFromCoord;
+
+      if (this.map.getObjects(this.marker) != null) {
+        if (this.map.getObjects(this.marker) != "")
+        {
+            this.map.removeObject(this.marker);
+        }
+      }
+
+      if (id==null && _address == null && _note == null)
+      {
+        return;
+      }
+
+
       this.icon = new H.map.Icon("/static/icons/marker.png");
+      
+      //get list suggestion
       var urlGetSuggestAddress = `http://autocomplete.geocoder.api.here.com/6.2/suggest.json?query=${
         this.AddressCustomer
       }&app_id=${this.appId}&app_code=${this.appCode}`;
+
       axios.get(urlGetSuggestAddress).then(result => {
         if (result.data.suggestions.length == 0) {
+          
           alert("Không tìm thấy địa điểm");
         } else {
           suggestAddress = result.data.suggestions[0].label;
@@ -94,18 +122,17 @@ export default {
               self.coord.lat = _lat;
               self.coord.lng = _lng;
 
+              //set data to send to server
               this.$session.set("ID", {
                 ID: id,
                 lat: _lat,
                 lng: _lng
               });
 
-              if (this.marker) {
-                this.map.removeObject(this.marker);
-              }
               this.marker = new H.map.Marker(self.coord, { icon: self.icon });
 
               this.marker.draggable = true;
+
 
               this.map.addObject(this.marker);
               this.map.setCenter(self.coord);
@@ -176,21 +203,25 @@ export default {
     var defaultLayers = this.platform.createDefaultLayers();
 
     this.map = new H.Map(this.$refs.map, defaultLayers.normal.map, {
-      zoom: 15,
+      zoom: 18,
       center: { lng: this.lng, lat: this.lat }
     });
 
     this.behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(this.map)
     );
-    this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
-    this.useMetricMeasurements(this.map, this.defaultLayers);
+    this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
   },
+  // updated() {
+  //   this.$emit("AddressCustomer", this.AddressCustomer);
+  // },
   methods: {
-    Located: function() {
+    Located: function(IDCustomer) {
+      EventBus.$emit("sendId", null, null, null);
+
       axios
         .post(
-          "http://172.16.1.21:3000/api/bookingBike/verifyRequestBooking",
+          "http://192.168.1.10:3000/api/bookingBike/verifyRequestBooking",
           this.$session.get("ID"),
           {
             headers: {
@@ -199,11 +230,33 @@ export default {
           }
         )
         .then(response => {
-          alert(JSON.stringify(response));
+          if (response.data.msg == "verify success!") {
+            EventBus.$emit("removeItem", IDCustomer);
+          }
         })
         .catch(err => {
           alert(err);
         });
+    },
+    keymonitor() {
+      document.getElementById("listAddressSuggest").style.display = "block";
+      var input = document.getElementById("address").value;
+      var urlGetSuggestAddress = `http://autocomplete.geocoder.api.here.com/6.2/suggest.json?query=${input}&app_id=${
+        this.appId
+      }&app_code=${this.appCode}`;
+
+      axios.get(urlGetSuggestAddress).then(result => {
+        this.suggests = result.data.suggestions;
+      });
+    },
+    ChangeAddress(label) {
+      document.getElementById("listAddressSuggest").style.display = "none";
+      EventBus.$emit("sendId", "", label, "");
+    }
+  },
+  watch: {
+    AddressCustomer: _newAddress => {
+      this.AddressCustomer = _newAddress;
     }
   }
 };

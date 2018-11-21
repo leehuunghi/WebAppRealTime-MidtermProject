@@ -8,7 +8,7 @@
             <div class="col-md-8 navTitle center">
                 Location Identifier
             </div>
-            <div class="col-md-2" style="text-align: right;">
+            <div class="col-md-2" style="text-align: right;" v-on:click="LogOut()">
                 <div>
                     <button class="logoutBtn-r">ĐĂNG XUẤT</button>
                 </div>
@@ -16,7 +16,7 @@
         </div>
     </div>
   <div id="confirm" class="row" style="height: 100%; width: 100%; padding-top: 65px; margin-left: 0px !important;">
-    <div class="col-md-4 rightFrame" style="width: 100% important; overflow: auto; height: 100%;">
+    <div class="col-md-4 rightFrame">
         <Request/>
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
@@ -40,6 +40,13 @@ export default {
   components: {
     Request,
     HereMap
+  },
+  methods: {
+    LogOut() {
+    //   this.$localStorage.remove("access-token");
+    //   this.$localStorage.remove("refresh-token");
+      this.$router.replace({ name: "FormLogin" });
+    }
   }
 };
 </script>
