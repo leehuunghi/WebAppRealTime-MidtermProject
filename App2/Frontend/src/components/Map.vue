@@ -1,5 +1,22 @@
 <template>
   <div class="here-map">
+         <div id="modal" class="modal-backdrop" style="height: 100% !important; display: none; width: 100% !important; background-color: transparent !important; z-index: 999999999;">
+        <div class="modal" role="dialog" style="display: block; padding-top: 200px; background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px;">
+                    <div>
+                        <h5 class="mdTitle">Sai địa chỉ</h5>
+                    </div>
+                    <div class="mdDes">
+                        <p>Không tìm thấy địa điểm.</p>
+                    </div>
+                    <div style="text-align: right">
+                        <button id="tryAgain" type="button" class="mdBtn">Thử lại</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
 
                 <div class="info">
                     <div class="row">
@@ -7,11 +24,11 @@
                             <div class="colTit">
                                 Địa chỉ
                             </div>
-                            <input type="text" v-model="AddressCustomer" v-on:keyup="keymonitor" id="address">
-                            <div id="listAddressSuggest">
-                                <div v-for="item in suggests" :key="item.id">
+                            <input type="text" v-model="AddressCustomer" v-on:keyup="keymonitor" id="address" style="margin-bottom: 5px; width: 400px !important; height: auto !important; padding: 5px 20px !important;">
+                            <div id="listAddressSuggest" class="sugFrame" style="display: none;">
+                                <div v-for="item in suggests" :key="item.id" style="font-size: 14px;">
                                 
-                                  <div v-on:click="ChangeAddress(item.label)">{{item.label}}</div>      
+                                  <span id="sug" v-on:click="ChangeAddress(item.label)">{{item.label}}</span>      
                                   
                                 </div>
                             </div>
@@ -21,20 +38,35 @@
                                 Ghi chú
                             </div>
                            
-                            <p id="note">{{NoteCustomer}}</p>
+                            <p class="note" style="!important; height: 33px; background-color: #f9f9f9; margin-bottom: 5px; !important; padding: 5px 20px !important;" id="note">{{NoteCustomer}}</p>
                             
                         </div>
-                        <div class="col-md-2" style="text-align: right;">
-                            <button class="locateBtn"  v-on:click="Located(IDCustomer)">Định vị</button>
+                        <div class="col-md-2" style="text-align: right; margin-top: 7px;">
+                            <button class="locateBtn" id="locateBtn" v-on:click="Located(IDCustomer)">Định vị</button>
                         </div>
                     </div>
                 </div>
-         
-      <div class="center" ref="map" v-bind:style="{ width: width, height: height }" id="map"></div>
+         <div>
+      <div class="center" ref="map" v-bind:style="{ width: width, height: '600px' }" id="map"></div>
+         </div>
   </div>
 </template>
 
 <script>
+$(document).ready(function() {
+  $("#address").keyup(function() {
+    if ($("#address").val() != "") {
+      $("#listAddressSuggest").show();
+    } else {
+      $("#listAddressSuggest").hide();
+    }
+  });
+
+  $("#tryAgain").click(function() {
+    $("#modal").fadeOut();
+  });
+});
+
 import axios from "axios";
 import { ModelSelect } from "vue-search-select";
 var selfID;
@@ -72,7 +104,6 @@ export default {
 
     //reveive address data
     EventBus.$on("sendId", (id, _address, _note) => {
-
       this.IDCustomer = id;
       this.AddressCustomer = _address;
       this.NoteCustomer = _note;
@@ -80,20 +111,17 @@ export default {
       var _lat, _lng, suggestAddress, urlGetAddress, urlGetAddressFromCoord;
 
       if (this.map.getObjects(this.marker) != null) {
-        if (this.map.getObjects(this.marker) != "")
-        {
-            this.map.removeObject(this.marker);
+        if (this.map.getObjects(this.marker) != "") {
+          this.map.removeObject(this.marker);
         }
       }
 
-      if (id==null && _address == null && _note == null)
-      {
+      if (id == null && _address == null && _note == null) {
         return;
       }
 
-
       this.icon = new H.map.Icon("/static/icons/marker.png");
-      
+
       //get list suggestion
       var urlGetSuggestAddress = `http://autocomplete.geocoder.api.here.com/6.2/suggest.json?query=${
         this.AddressCustomer
@@ -101,8 +129,8 @@ export default {
 
       axios.get(urlGetSuggestAddress).then(result => {
         if (result.data.suggestions.length == 0) {
-          
-          alert("Không tìm thấy địa điểm");
+          $("#modal").fadeIn(200);
+          $("#locateBtn").fadeOut();
         } else {
           suggestAddress = result.data.suggestions[0].label;
           urlGetAddress =
@@ -132,7 +160,6 @@ export default {
               this.marker = new H.map.Marker(self.coord, { icon: self.icon });
 
               this.marker.draggable = true;
-
 
               this.map.addObject(this.marker);
               this.map.setCenter(self.coord);
@@ -221,7 +248,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.1.10:3000/api/bookingBike/verifyRequestBooking",
+          "http://172.16.9.218:3000/api/bookingBike/verifyRequestBooking",
           this.$session.get("ID"),
           {
             headers: {
@@ -233,6 +260,10 @@ export default {
           if (response.data.msg == "verify success!") {
             EventBus.$emit("removeItem", IDCustomer);
           }
+          else {
+            $("#modal").fadeIn();
+            $("#locateBtn").fadeOut();
+            }
         })
         .catch(err => {
           alert(err);
@@ -252,6 +283,7 @@ export default {
     ChangeAddress(label) {
       document.getElementById("listAddressSuggest").style.display = "none";
       EventBus.$emit("sendId", "", label, "");
+      $("#locateBtn").fadeIn();
     }
   },
   watch: {

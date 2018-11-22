@@ -44,7 +44,7 @@ export default {
     var self = this;
     axios
       .get(
-        "http://192.168.1.10:3000/api/bookingBike/loadAllRequestBookingWaiting",
+        "http://172.16.9.218:3000/api/bookingBike/loadAllRequestBookingWaiting",
         {
           headers: {
             "x-access-token": this.$session.get("access_token")
@@ -82,7 +82,7 @@ export default {
     });
   },
   mounted() {
-    this.$sse("http://192.168.1.10:3000/api/a", { format: "json" })
+    this.$sse("http://172.16.9.218:3000/api/a", { format: "json" })
       .then(sse => {
         sse.subscribe("REQUEST_BOOKING", response => {
           response[0].time = VueMoment.unix(response[0].time).format(
@@ -105,7 +105,7 @@ export default {
         document.getElementsByClassName("click")[index].style.color = "black";
       }
 
-      document.getElementById(id).style.color = "red";
+      document.getElementById(id).style.color = "#0FA9D6";
       EventBus.$emit("sendId", id, address, note);
 
       // var item = this.requests.find(x => x.id == id);
