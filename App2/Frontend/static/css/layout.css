@@ -90,7 +90,7 @@ input{
     border: 1px solid #0FA9D6;
     border-radius: 25px;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 14px !important;
     padding: 20px;
 }
 
@@ -209,12 +209,15 @@ input::placeholder {
 }
 
 .info{
-    margin: 0px;
+    margin: 0px 10px;
     margin-top: 10px !important;
     background: #fff;
     padding: 10px 20px;;
     box-shadow: 10px 0 50px rgba(0,0,0,0.15);
     border-radius: 10px;
+    position: fixed;
+    z-index: 999999;
+    width: 65%;
 }
 
 .locateBtn{
@@ -273,4 +276,22 @@ input::placeholder {
     border: none;
     text-align: right;
     cursor: pointer;
+}
+
+.sugFrame{
+    background-color: #fff;
+    margin-top: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border-radius: 10px;
+    position: fixed;
+}
+
+.note{
+    height: 50px;
+    border: 1px solid #0FA9D6;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 20px;
 }

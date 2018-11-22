@@ -19,7 +19,7 @@
     <div class="col-md-4 rightFrame">
         <Request/>
     </div>
-    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="padding: 0px;">
        <HereMap
             appId="SxxR970XbZjWq11DxSea"
             appCode="ZIgTe3WyzSsHXAsKjPBljg"
