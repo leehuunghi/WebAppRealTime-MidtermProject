@@ -50,11 +50,11 @@
         </div>
         <div style="width: 45%;">
             <div id="readyBtn" class="toggleOff" style="float: left; border-radius: 50px 0px 0px 50px;" 
-            v-on:click ="Ready">
+            v-on:click ="Ready(coordDriver, username)">
                 Ready
             </div>
             <div id="standbyBtn" class="toggleOn" style="float: left; border-radius: 0px 50px 50px 0px;"
-            v-on:click ="Standby">
+            v-on:click ="Standby(username)">
                 Standby
             </div>
         </div>
@@ -65,8 +65,6 @@
         <img src="/static/icons/current-location.png" alt="" width="50px" id="imgCurrent"
             style="position: absolute; z-index: 100; margin-left: 300px; margin-top:500px" v-on:click="CurrentLocation">
     </div>
-
-    
 
     <!--Take-->
     <div id="take" class="notif" style="display: none;">
@@ -184,11 +182,14 @@ $(document).ready(function() {
 import io from "socket.io-client";
 import axios from "axios";
 
-// var socket = require("socket.io-client")("http://172.16.9.218:3030");
+var socket = require("socket.io-client")("http://172.16.9.218:3030");
+socket.on("connect", function() {});
+
 export default {
   name: "Main",
   data() {
     return {
+        username: "",
       map: {},
       behavior: "",
       coordGuest: { lat: "", lng: "" },
@@ -204,6 +205,8 @@ export default {
     };
   },
   created() {
+      this.username = this.$session.get("username");
+
     this.platform = new H.service.Platform({
       app_id: "SxxR970XbZjWq11DxSea",
       app_code: "ZIgTe3WyzSsHXAsKjPBljg"
@@ -269,6 +272,11 @@ export default {
         EventBus.$emit("DriverLocation", coord);
       }
     });
+
+    socket.on("hasRequestBooking", function(response) {
+        alert(1);
+        alert(JSON.stringify(response));
+    });
   },
   methods: {
     CurrentLocation() {
@@ -280,19 +288,47 @@ export default {
         EventBus.$emit("DriverLocation", coordinates);
       });
     },
-    Ready() {
+    Ready(coordDriver, username) {
       document.getElementById("take").style.display = "block";
       document.getElementById("imgCurrent").style.marginTop = "200px";
       // document.getElementById("hereMap").style.height= 400 + "px";
 
       //notification to server
+      axios.post("http://172.16.9.218:3000/api/driver/updateLocationDriver", {
+          lat: coordDriver.lat,
+          lng: coordDriver.lng,
+          username: username
+      }, {
+          headers: {
+                'x-access-token':  this.$session.get('access_token')
+            }
+      });
+      axios.post("http://172.16.9.218:3000/api/driver/updateStatusDriver",{
+          status:  "READY",
+          username: username
+      }, {
+          headers: {
+                'x-access-token':  this.$session.get('access_token')
+            }
+      }
+      );
+
     },
-    Standby() {
+    Standby(username) {
       document.getElementById("take").style.display = "none";
       document.getElementById("imgCurrent").style.marginTop = "500px";
       // document.getElementById("hereMap").style.height = 600 + "px";
 
       //notification to server
+    axios.post("http://172.16.9.218:3000/api/driver/updateStatusDriver",{
+          status:  "STANDBY",
+          username: username
+      }, {
+          headers: {
+                'x-access-token':  this.$session.get('access_token')
+            }
+      }
+      );
     }
   }
 };

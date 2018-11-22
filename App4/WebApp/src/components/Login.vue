@@ -54,10 +54,11 @@ $(document).ready(function() {
       $("#password").addClass("redBorder");
       $("#password").addClass("errorPH");
       $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
-    } else {
-      // $("#signin").submit();
-      // $("#modal").fadeIn("fast");
     }
+    // } else {
+    //   // $("#signin").submit();
+    //   // $("#modal").fadeIn("fast");
+    // }
   });
   $("#username").focusout(function() {
     if ($("#username").val() == "") {
@@ -96,7 +97,7 @@ export default {
     return {
       title: "Login",
       formdata: {
-        role: "employee"
+        role: "driver"
       },
       auth: "",
       access_token: "",
@@ -133,6 +134,7 @@ export default {
                 "refresh_token",
                 response.data.refresh_token
               );
+              this.$session.set("username", this.formdata.username);
               this.$router.replace({ name: "Main" });
             }
             else{

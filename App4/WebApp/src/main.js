@@ -31,6 +31,9 @@ window.EventBus = new Vue({
   }
  });
 
+ import VueSSE from 'vue-sse';
+ Vue.use(VueSSE);
+
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 
