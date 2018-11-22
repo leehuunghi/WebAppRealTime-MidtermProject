@@ -51,6 +51,7 @@ Vue.use(VueLogger, options);
 
 Vue.config.productionTip = false
 
+window.EventBus = new Vue();
 
 /* eslint-disable no-new */
 new Vue({

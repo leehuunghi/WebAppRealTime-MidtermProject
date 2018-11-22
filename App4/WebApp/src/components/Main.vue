@@ -49,20 +49,27 @@
             <span id="signoutBtn" class="logoutBtn">ĐĂNG XUẤT</span>
         </div>
         <div style="width: 45%;">
-            <div id="readyBtn" class="toggleOff" style="float: left; border-radius: 50px 0px 0px 50px;">
+            <div id="readyBtn" class="toggleOff" style="float: left; border-radius: 50px 0px 0px 50px;" 
+            v-on:click ="Ready">
                 Ready
             </div>
-            <div id="standbyBtn" class="toggleOn" style="float: left; border-radius: 0px 50px 50px 0px;">
+            <div id="standbyBtn" class="toggleOn" style="float: left; border-radius: 0px 50px 50px 0px;"
+            v-on:click ="Standby">
                 Standby
             </div>
         </div>
     </div>
     
     <!-- here map -->
-    <div ref="map" style="width: 100%; height: 600px;"></div>
+    <div ref="map" style="width: 100%; height: 600px; position: relative" id="hereMap">
+        <img src="/static/icons/current-location.png" alt="" width="50px" id="imgCurrent"
+            style="position: absolute; z-index: 100; margin-left: 300px; margin-top:500px" v-on:click="CurrentLocation">
+    </div>
+
+    
 
     <!--Take-->
-    <div v-if="ready" id="take" class="notif" style="display: block;">
+    <div id="take" class="notif" style="display: none;">
         <h1 class="notifTit">Yêu cầu đặt xe</h1>
         <h1 class="notifTitDes">Bạn có một yêu cầu đặt xe</h1>
         <div style="width: 100%; padding: 10px 24px 24px 24px">
@@ -78,8 +85,13 @@
                 </div>
             </div>
         </div>
-        <div style="width: 100%; padding: 0px 24px;">
-            <button id="takeBtn" type="button" class="actionBtn take">NHẬN</button>
+        <div class="row" style="width: 100%; padding: 0px 24px;">
+            <div class="col-sm-6 col-md-6"> 
+                <button id="takeBtn" type="button" class="actionBtn take" v-on:click="Accept">NHẬN</button> 
+            </div>
+            <div class="col-sm-6 col-md-6"> 
+               <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse">TỪ CHỐI</button> 
+            </div>
         </div>
     </div>
 
@@ -171,15 +183,17 @@ $(document).ready(function() {
 
 import io from "socket.io-client";
 import axios from "axios";
-// var socket = require("socket.io-client")("http://192.168.1.10:3030");
+
+// var socket = require("socket.io-client")("http://172.16.9.218:3030");
 export default {
-  name: "MapRouter",
+  name: "Main",
   data() {
     return {
       map: {},
       behavior: "",
       coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
+      pointDriver: "",
       platform: {},
       View: [],
       markerGuest: "",
@@ -204,6 +218,18 @@ export default {
       timeout: Infinity, //defaults to Infinity
       maximumAge: 0 //defaults to 0
     }).then(coordinates => {
+      this.pointDriver = new H.geo.Point(
+        coordinates.lat,
+        coordinates.lng
+      );
+      EventBus.$emit("DriverLocation", coordinates);
+    });
+
+    EventBus.$on("DriverLocation", coordinates => {
+      if (this.map.getObjects(this.markerDriver) != null) {
+        this.map.removeObject(this.markerDriver);
+      }
+
       self.coordDriver = coordinates;
       self.markerDriver = new H.map.Marker(self.coordDriver, {
         icon: self.iconDriver
@@ -211,14 +237,15 @@ export default {
       self.map.addObject(self.markerDriver);
       self.map.setCenter(self.coordDriver);
     });
-
   },
   mounted() {
     // Initialize the platform object:
     var defaultLayers = this.platform.createDefaultLayers();
-    this.map = new H.Map(this.$refs.map, defaultLayers.normal.ap, {
-      zoom: 13
+    var self = this;
+    this.map = new H.Map(this.$refs.map, defaultLayers.normal.map, {
+      zoom: 20
     });
+
     this.behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(this.map)
     );
@@ -228,6 +255,45 @@ export default {
     this.map.setCenter(this.coordDriver);
     this.map.addObject(this.markerDriver);
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
+
+    this.map.addEventListener("tap", function(evt) {
+      var coord = self.map.screenToGeo(
+        evt.currentPointer.viewportX,
+        evt.currentPointer.viewportY
+      );
+
+      var pointNew = new H.geo.Point(coord.lat, coord.lng);
+      var distance = self.pointDriver.distance(pointNew);
+      if (distance > 100) alert("Vị trí được cập nhật xa hơn 100m");
+      else {
+        EventBus.$emit("DriverLocation", coord);
+      }
+    });
+  },
+  methods: {
+    CurrentLocation() {
+      this.$getLocation({
+        enableHighAccuracy: false, //defaults to false
+        timeout: Infinity, //defaults to Infinity
+        maximumAge: 0 //defaults to 0
+      }).then(coordinates => {
+        EventBus.$emit("DriverLocation", coordinates);
+      });
+    },
+    Ready() {
+      document.getElementById("take").style.display = "block";
+      document.getElementById("imgCurrent").style.marginTop = "200px";
+      // document.getElementById("hereMap").style.height= 400 + "px";
+
+      //notification to server
+    },
+    Standby() {
+      document.getElementById("take").style.display = "none";
+      document.getElementById("imgCurrent").style.marginTop = "500px";
+      // document.getElementById("hereMap").style.height = 600 + "px";
+
+      //notification to server
+    }
   }
 };
 </script>
