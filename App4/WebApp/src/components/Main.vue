@@ -74,18 +74,19 @@
             <div class="guestInfo" style="width: 100%">
                 <div style="width: 80%;">
                     <div>
-                        <div class="guestName">Nguyễn Văn A</div>
-                        <div class="guestAdd">215C Trương Công Định, phường 7, Q.Tân Bình</div>
+                        <div class="guestName">{{Guest.name}}</div>
+                        <div class="guestAdd">{{Guest.address}}</div>
                     </div>
                 </div>
-                <div style="float: right; width: 20%; text-align: right; margin-top: -40px;">
+        
+                <!-- <div style="float: right; width: 20%; text-align: right; margin-top: -40px;">
                     <button type="button" id="phoneBtn" class="phoneBtn"><img src="/static/pics/phone.png" width="15px"></button>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="row" style="width: 100%; padding: 0px 24px;">
             <div class="col-sm-6 col-md-6"> 
-                <button id="takeBtn" type="button" class="actionBtn take" v-on:click="Accept">NHẬN</button> 
+                <button id="takeBtn accept" type="button" class="actionBtn take" v-on:click="Accept(Guest.ID, time_out)">NHẬN</button> 
             </div>
             <div class="col-sm-6 col-md-6"> 
                <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse">TỪ CHỐI</button> 
@@ -182,16 +183,18 @@ $(document).ready(function() {
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://172.16.9.218:3030");
+var socket = require("socket.io-client")("http://172.168.10.107:1412");
 socket.on("connect", function() {});
+socket.emit("subcriseDriver");
 
 export default {
   name: "Main",
   data() {
     return {
-        username: "",
+      username: "",
       map: {},
       behavior: "",
+      Guest: {},
       coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
       pointDriver: "",
@@ -201,11 +204,12 @@ export default {
       markerDriver: "",
       iconGuest: "",
       iconDriver: "",
-      ui: {}
+      ui: {},
+      time_out: ""
     };
   },
   created() {
-      this.username = this.$session.get("username");
+    this.username = this.$session.get("username");
 
     this.platform = new H.service.Platform({
       app_id: "SxxR970XbZjWq11DxSea",
@@ -221,10 +225,7 @@ export default {
       timeout: Infinity, //defaults to Infinity
       maximumAge: 0 //defaults to 0
     }).then(coordinates => {
-      this.pointDriver = new H.geo.Point(
-        coordinates.lat,
-        coordinates.lng
-      );
+      this.pointDriver = new H.geo.Point(coordinates.lat, coordinates.lng);
       EventBus.$emit("DriverLocation", coordinates);
     });
 
@@ -240,6 +241,18 @@ export default {
       self.map.addObject(self.markerDriver);
       self.map.setCenter(self.coordDriver);
     });
+
+    socket.on("getInfoRequestByRequestIDEvent", function(response) {
+              alert(JSON.stringify(response));
+            if (response) {
+              self.Guest = response[0];
+              
+              this.time_out = setTimeout(function() {
+               alert("Hết thời gian phản hồi");
+              }, 10000);
+            }
+          });
+
   },
   mounted() {
     // Initialize the platform object:
@@ -273,10 +286,24 @@ export default {
       }
     });
 
-    socket.on("hasRequestBooking", function(response) {
-        alert(1);
-        alert(JSON.stringify(response));
-    });
+    // document.getElementById("accept").addEventListener("pointerdown",window.clearTimeout(this.time_out));
+
+
+    //receive booking
+    socket
+      .on("hasRequestBooking", function(guest) {
+        if (guest.ID != null) {
+          document.getElementById("take").style.display = "block";
+
+          //sent ID request to get info request
+          socket.emit("getInfoRequestByRequestID", guest.ID);
+
+         
+        }
+      })
+      .catch(err => {
+        alert(err);
+      });
   },
   methods: {
     CurrentLocation() {
@@ -289,30 +316,35 @@ export default {
       });
     },
     Ready(coordDriver, username) {
-      document.getElementById("take").style.display = "block";
       document.getElementById("imgCurrent").style.marginTop = "200px";
       // document.getElementById("hereMap").style.height= 400 + "px";
 
       //notification to server
-      axios.post("http://172.16.9.218:3000/api/driver/updateLocationDriver", {
+      axios.post(
+        "http://172.168.10.107:3000/api/driver/updateLocationDriver",
+        {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
           username: username
-      }, {
+        },
+        {
           headers: {
-                'x-access-token':  this.$session.get('access_token')
-            }
-      });
-      axios.post("http://172.16.9.218:3000/api/driver/updateStatusDriver",{
-          status:  "READY",
-          username: username
-      }, {
-          headers: {
-                'x-access-token':  this.$session.get('access_token')
-            }
-      }
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
       );
-
+      axios.post(
+        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        {
+          status: "READY",
+          username: username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
     },
     Standby(username) {
       document.getElementById("take").style.display = "none";
@@ -320,16 +352,31 @@ export default {
       // document.getElementById("hereMap").style.height = 600 + "px";
 
       //notification to server
-    axios.post("http://172.16.9.218:3000/api/driver/updateStatusDriver",{
-          status:  "STANDBY",
+      axios.post(
+        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        {
+          status: "STANDBY",
           username: username
-      }, {
+        },
+        {
           headers: {
-                'x-access-token':  this.$session.get('access_token')
-            }
-      }
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
       );
+    },
+    Accept(IDBooking, timeout) {
+        window.clearTimeout(timeout);
+      alert("chấp nhận");
+    },
+    Refuse(Guest) {
+      alert("Từ chối");
     }
   }
 };
 </script>
+
+<style>
+@import "vue-countdown-component/dist/vue-countdown.min.css";
+</style>
+
