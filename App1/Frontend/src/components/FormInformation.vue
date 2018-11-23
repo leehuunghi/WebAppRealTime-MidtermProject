@@ -20,7 +20,7 @@
         <div id="modalSucceed" class="modal-backdrop" style="height: 100% !important; display: none; width: 100% !important; background-color: transparent !important;">
         <div class="modal" role="dialog" style="display: block; padding-top: 200px; background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog" role="document">
-                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px;">
+                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px; border: 5px solid #0FA9D6;">
                     <div>
                         <h5 class="mdTitle">Thành công</h5>
                     </div>
@@ -74,6 +74,59 @@
 <script>
 
 $(document).ready(function() {
+    $("#submitBtn").click(function() {
+    if ($("#name").val() == "") {
+      $("#name").addClass("redBorder");
+      $("#name").addClass("errorPH");
+      $("#name").attr("placeholder", "Vui lòng nhập tên khách");
+    }
+    if ($("#address").val() == "") {
+      $("#address").addClass("redBorder");
+      $("#address").addClass("errorPH");
+      $("#address").attr("placeholder", "Vui lòng nhập địa chỉ đón");
+    }
+    if ($("#phone").val() == "") {
+      $("#phone").addClass("redBorder");
+      $("#phone").addClass("errorPH");
+      $("#phone").attr("placeholder", "Vui lòng nhập số điện thoại");
+    }
+  });
+  $("#name").focusout(function() {
+    if ($("#name").val() == "") {
+      $("#name").addClass("redBorder");
+      $("#name").addClass("errorPH");
+      $("#name").attr("placeholder", "Vui lòng nhập tên khách");
+    }
+  });
+  $("#address").focusout(function() {
+    if ($("#address").val() == "") {
+      $("#address").addClass("redBorder");
+      $("#address").addClass("errorPH");
+      $("#address").attr("placeholder", "Vui lòng địa chỉ đón");
+    }
+  });
+  $("#phone").focusout(function() {
+    if ($("#phone").val() == "") {
+      $("#phone").addClass("redBorder");
+      $("#phone").addClass("errorPH");
+      $("#phone").attr("placeholder", "Vui lòng nhập số điện thoại");
+    }
+  });
+  $("#name").click(function() {
+    $("#name").removeClass("redBorder");
+    $("#name").removeClass("errorPH");
+    $("#name").attr("placeholder", "");
+  });
+  $("#address").click(function() {
+    $("#address").removeClass("redBorder");
+    $("#address").removeClass("errorPH");
+    $("#address").attr("placeholder", "");
+  });
+  $("#phone").click(function() {
+    $("#phone").removeClass("redBorder");
+    $("#phone").removeClass("errorPH");
+    $("#phone").attr("placeholder", "");
+  });
   $("#tryAgain").click(function() {
     $("#modalFail").fadeOut("fast");
   });
@@ -95,8 +148,34 @@ export default {
   },
   methods: {
     sendinfo() {
+        var flag = true;
+        if ($("#name").val() == "") {
+        $("#name").addClass("redBorder");
+        $("#name").addClass("errorPH");
+        $("#name").addClass("errorShake");
+        setTimeout(function(){$("#name").removeClass("errorShake")},500);
+        flag=false;
+        $("#name").attr("placeholder", "Vui lòng nhập tên khách");
+      }
+      if ($("#address").val() == "") {
+        $("#address").addClass("redBorder"); 
+        $("#address").addClass("errorPH");
+        $("#address").attr("placeholder", "Vui lòng nhập địa chỉ đón");
+        $("#address").addClass("errorShake");
+        setTimeout(function(){$("#address").removeClass("errorShake")},500);
+        flag=false;
+      }
+      if ($("#phone").val() == "") {
+        $("#phone").addClass("redBorder");
+        $("#phone").addClass("errorPH");
+        $("#phone").attr("placeholder", "Vui lòng nhập số điện thoại");
+        $("#phone").addClass("errorShake");
+        setTimeout(function(){$("#phone").removeClass("errorShake")},500);
+        flag=false;
+      }
+      if (flag==true) {
       axios
-        .post("http://172.16.9.218:3000/api/bookingBike/book", this.formdata, {
+        .post("http://172.168.10.107:3000/api/bookingBike/book", this.formdata, {
           headers: {
             'x-access-token': this.$localStorage.get('access_token')
           }
@@ -111,6 +190,7 @@ export default {
         .catch(err => {
           $("#modalFail").fadeIn();
         });
+    }
     }
   }
 };
