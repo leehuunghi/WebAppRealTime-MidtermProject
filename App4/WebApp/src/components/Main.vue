@@ -89,7 +89,7 @@
                 <button id="takeBtn accept" type="button" class="actionBtn take" v-on:click="Accept(time_out)">NHẬN</button> 
             </div>
             <div class="col-sm-6 col-md-6"> 
-               <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse">TỪ CHỐI</button> 
+               <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse(Guest)">TỪ CHỐI</button> 
             </div>
         </div>
     </div>
@@ -245,7 +245,6 @@ export default {
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
       if (response) {
         self.Guest = response[0];
-
         self.time_out = setTimeout(function() {
           alert("Hết thời gian phản hồi");
         }, 10000);
@@ -253,6 +252,7 @@ export default {
     });
 
     EventBus.$on("Route", () => {
+        
         self.coordGuest.lat = self.Guest.guest_lat;
         self.coordGuest.lng = self.Guest.guest_lng;
       self.markerGuest = new H.map.Marker(self.coordGuest, {
@@ -401,7 +401,33 @@ export default {
       EventBus.$emit("Route");
     },
     Refuse(Guest) {
-      alert("Từ chối");
+        alert(JSON.stringify(Guest));
+        var IDGuest = {
+            ID: Guest.ID,
+            lat: Guest.guest_lat,
+            lng: Guest.guest_lng
+        }
+      axios
+        .post(
+          "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
+           IDGuest,
+          {
+            headers: {
+              "x-access-token": this.$localStorage.get("access_token")
+            }
+          }
+        )
+        .then(response => {
+          if (response.data.msg == "verify success!") {
+            alert("Đã từ chối");
+          }
+          else {
+           alert("Đã xảy ra lỗi");
+        }})
+        .catch(err => {
+          alert(err);
+        });
+        
     }
   }
 };
