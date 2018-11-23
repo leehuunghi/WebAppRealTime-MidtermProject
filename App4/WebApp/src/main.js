@@ -23,13 +23,7 @@ Vue.use({
   }
 })
 
-window.EventBus = new Vue({  
-  data(){
-    return {
-      authenticated:""
-    }
-  }
- });
+window.EventBus = new Vue();
 
  import VueSSE from 'vue-sse';
  Vue.use(VueSSE);

@@ -86,7 +86,7 @@
         </div>
         <div class="row" style="width: 100%; padding: 0px 24px;">
             <div class="col-sm-6 col-md-6"> 
-                <button id="takeBtn accept" type="button" class="actionBtn take" v-on:click="Accept(Guest.ID, time_out)">NHẬN</button> 
+                <button id="takeBtn accept" type="button" class="actionBtn take" v-on:click="Accept(time_out)">NHẬN</button> 
             </div>
             <div class="col-sm-6 col-md-6"> 
                <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse">TỪ CHỐI</button> 
@@ -195,7 +195,7 @@ export default {
       map: {},
       behavior: "",
       Guest: {},
-      coordGuest: { lat: "", lng: "" },
+        coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
       pointDriver: "",
       platform: {},
@@ -205,7 +205,7 @@ export default {
       iconGuest: "",
       iconDriver: "",
       ui: {},
-      time_out: ""
+      time_out: {}
     };
   },
   created() {
@@ -217,7 +217,7 @@ export default {
     });
 
     var self = this;
-    // this.iconGuest = new H.map.Icon("/static/icons/marker-passenger.png");
+    this.iconGuest = new H.map.Icon("/static/icons/marker-driver.png");
     this.iconDriver = new H.map.Icon("/static/icons/marker-driver.png");
 
     this.$getLocation({
@@ -243,16 +243,52 @@ export default {
     });
 
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
-              alert(JSON.stringify(response));
-            if (response) {
-              self.Guest = response[0];
-              
-              this.time_out = setTimeout(function() {
-               alert("Hết thời gian phản hồi");
-              }, 10000);
-            }
-          });
+      if (response) {
+        self.Guest = response[0];
 
+        self.time_out = setTimeout(function() {
+          alert("Hết thời gian phản hồi");
+        }, 10000);
+      }
+    });
+
+    EventBus.$on("Route", () => {
+        self.coordGuest.lat = self.Guest.guest_lat;
+        self.coordGuest.lng = self.Guest.guest_lng;
+      self.markerGuest = new H.map.Marker(self.coordGuest, {
+        icon: self.iconGuest
+      });
+      // Create the parameters for the routing request:
+      var urlGetRouteShape = `https://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=${
+        self.coordGuest.lat
+      },${self.coordGuest.lng}&waypoint1=${self.coordDriver.lat},${
+        self.coordDriver.lng
+      }&mode=fastest;bicycle&routeattributes=sh&maneuverattributes=di,sh&app_id=SxxR970XbZjWq11DxSea&app_code=ZIgTe3WyzSsHXAsKjPBljg`;
+      axios.get(urlGetRouteShape).then(result => {
+        var route, routeShape, startPoint, endPoint, linestring;
+        if (result.data.response.route) {
+          // Pick the first route from the response:
+          route = result.data.response.route[0];
+          // Pick the route's shape:
+          routeShape = route.shape;
+          // Create a linestring to use as a point source for the route line
+          linestring = new H.geo.LineString();
+          // Push all the points in the shape into the linestring:
+          routeShape.forEach(function(point) {
+            var parts = point.split(",");
+            linestring.pushLatLngAlt(parts[0], parts[1]);
+          });
+          // Create a polyline to display the route:
+          var routeLine = new H.map.Polyline(linestring, {
+            style: { strokeColor: "#0FA9D6", lineWidth: 10 }
+          });
+          // Add the route polyline and the two markers to the map:
+          self.map.addObjects([routeLine, self.markerDriver, self.markerGuest]);
+          // Set the map's viewport to make the whole route visible:
+          self.map.setViewBounds(routeLine.getBounds());
+        }
+      });
+    });
   },
   mounted() {
     // Initialize the platform object:
@@ -286,9 +322,6 @@ export default {
       }
     });
 
-    // document.getElementById("accept").addEventListener("pointerdown",window.clearTimeout(this.time_out));
-
-
     //receive booking
     socket
       .on("hasRequestBooking", function(guest) {
@@ -297,8 +330,6 @@ export default {
 
           //sent ID request to get info request
           socket.emit("getInfoRequestByRequestID", guest.ID);
-
-         
         }
       })
       .catch(err => {
@@ -365,9 +396,9 @@ export default {
         }
       );
     },
-    Accept(IDBooking, timeout) {
-        window.clearTimeout(timeout);
-      alert("chấp nhận");
+    Accept(timeout) {
+      window.clearTimeout(timeout);
+      EventBus.$emit("Route");
     },
     Refuse(Guest) {
       alert("Từ chối");
