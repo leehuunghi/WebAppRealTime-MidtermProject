@@ -16,6 +16,8 @@ import 'here-js-api/scripts/mapsjs-clustering';
 //     // moment,
 // })
 
+import VueSSE from 'vue-sse';
+Vue.use(VueSSE);
 
 import VueLocalStorage from 'vue-localstorage'
 

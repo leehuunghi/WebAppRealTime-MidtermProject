@@ -1,6 +1,6 @@
 <template>
   <div class="here-map">
-         <div id="modal" class="modal-backdrop" style="height: 100% !important; display: none; width: 100% !important; background-color: transparent !important; z-index: 999999999;">
+         <div id="modalFail" class="modal-backdrop" style="height: 100% !important; display: none; width: 100% !important; background-color: transparent !important; z-index: 999999999;">
         <div class="modal" role="dialog" style="display: block; padding-top: 200px; background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px;">
@@ -12,6 +12,24 @@
                     </div>
                     <div style="text-align: right">
                         <button id="tryAgain" type="button" class="mdBtn">Thử lại</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div id="modalSucceed" class="modal-backdrop" style="height: 100% !important; display: none; width: 100% !important; background-color: transparent !important; z-index: 999999999;">
+        <div class="modal" role="dialog" style="display: block; padding-top: 200px; background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px; border: 5px solid #0FA9D6;">
+                    <div>
+                        <h5 class="mdTitle">Thành công</h5>
+                    </div>
+                    <div class="mdDes">
+                        <p>Định vị thành công.</p>
+                    </div>
+                    <div style="text-align: right">
+                        <button id="close" type="button" class="mdBtn">ĐÓNG</button>
                     </div>
                 </div>
             </div>
@@ -60,10 +78,14 @@ $(document).ready(function() {
     } else {
       $("#listAddressSuggest").hide();
     }
-  });
+  })
 
   $("#tryAgain").click(function() {
-    $("#modal").fadeOut();
+    $("#modalFail").fadeOut();
+  });
+
+  $("#close").click(function() {
+    $("#modalSucceed").fadeOut();
   });
 });
 
@@ -106,6 +128,7 @@ export default {
     EventBus.$on("sendId", (id, _address, _note) => {
       this.IDCustomer = id;
       this.AddressCustomer = _address;
+      if (_note=="undefined") _note="";
       this.NoteCustomer = _note;
       var self = this;
       var _lat, _lng, suggestAddress, urlGetAddress, urlGetAddressFromCoord;
@@ -129,9 +152,10 @@ export default {
 
       axios.get(urlGetSuggestAddress).then(result => {
         if (result.data.suggestions.length == 0) {
-          $("#modal").fadeIn(200);
-          $("#locateBtn").fadeOut();
+          $("#modalFail").fadeIn(200);
+          $("#locateBtn").fadeOut(200);
         } else {
+          $("#locateBtn").fadeIn(200);
           suggestAddress = result.data.suggestions[0].label;
           urlGetAddress =
             "https://geocoder.api.here.com/6.2/geocode.json?app_id=SxxR970XbZjWq11DxSea&app_code=ZIgTe3WyzSsHXAsKjPBljg&searchtext=" +
@@ -245,25 +269,24 @@ export default {
   methods: {
     Located: function(IDCustomer) {
       EventBus.$emit("sendId", null, null, null);
-
       axios
         .post(
-          "http://172.16.9.218:3000/api/bookingBike/verifyRequestBooking",
+          "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
           this.$session.get("ID"),
           {
             headers: {
-              "x-access-token": this.$session.get("access_token")
+              "x-access-token": this.$localStorage.get("access_token")
             }
           }
         )
         .then(response => {
           if (response.data.msg == "verify success!") {
             EventBus.$emit("removeItem", IDCustomer);
-          }
-          else {
-            $("#modal").fadeIn();
+            $("#modalSucceed").fadeIn();
+          } else {
+            $("#modalFail").fadeIn();
             $("#locateBtn").fadeOut();
-            }
+          }
         })
         .catch(err => {
           alert(err);

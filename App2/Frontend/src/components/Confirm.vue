@@ -16,7 +16,7 @@
         </div>
     </div>
   <div id="confirm" class="row" style="height: 100%; width: 100%; padding-top: 65px; margin-left: 0px !important;">
-    <div class="col-md-4 rightFrame">
+    <div class="col-md-4 rightFrame" style="padding-right: 0px">
         <Request/>
     </div>
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="padding: 0px;">
@@ -33,6 +33,17 @@
 </template>
 
 <script>
+$(document).ready(function(){
+    $("#tryAgain").click(function() {
+  $("#modalFail").fadeOut();
+});
+
+$("#close").click(function() {
+  $("#modalSucceed").fadeOut();
+});
+
+})
+
 import Request from "./Request";
 import HereMap from "./Map";
 
@@ -43,8 +54,8 @@ export default {
   },
   methods: {
     LogOut() {
-    //   this.$localStorage.remove("access-token");
-    //   this.$localStorage.remove("refresh-token");
+      //   this.$localStorage.remove("access-token");
+      //   this.$localStorage.remove("refresh-token");
       this.$router.replace({ name: "FormLogin" });
     }
   }

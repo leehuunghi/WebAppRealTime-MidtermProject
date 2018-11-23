@@ -1,6 +1,6 @@
 <template>
-<div style="width: 100% important; overflow: auto; height: 100%;">
- 
+<div style="width: 100% important; height: 600px; overflow:scroll; overflow-x:hidden;">
+  <div style="margin-right: 15px;">
         <div id="tit" class="row colTit" style="margin: 10px 15px;">
                 <div class="col-md-5">
                     ID
@@ -26,7 +26,7 @@
                     </div>
             </div>
         </div>
- 
+  </div>
 </div>
 </template>
 
@@ -44,10 +44,10 @@ export default {
     var self = this;
     axios
       .get(
-        "http://172.16.9.218:3000/api/bookingBike/loadAllRequestBookingWaiting",
+        "http://172.168.10.107:3000/api/bookingBike/loadAllRequestBookingWaiting",
         {
           headers: {
-            "x-access-token": this.$session.get("access_token")
+            "x-access-token": this.$localStorage.get("access_token")
           }
         }
       )
@@ -78,11 +78,10 @@ export default {
       ) {
         document.getElementsByClassName("click")[index].style.color = "black";
       }
-      
     });
   },
   mounted() {
-    this.$sse("http://172.16.9.218:3000/api/a", { format: "json" })
+    this.$sse("http://172.168.10.107:3000/api/a", { format: "json" })
       .then(sse => {
         sse.subscribe("REQUEST_BOOKING", response => {
           response[0].time = VueMoment.unix(response[0].time).format(
