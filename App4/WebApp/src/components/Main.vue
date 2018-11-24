@@ -78,18 +78,14 @@
                         <div class="guestAdd">{{Guest.address}}</div>
                     </div>
                 </div>
-        
-                <!-- <div style="float: right; width: 20%; text-align: right; margin-top: -40px;">
-                    <button type="button" id="phoneBtn" class="phoneBtn"><img src="/static/pics/phone.png" width="15px"></button>
-                </div> -->
             </div>
         </div>
-        <div class="row" style="width: 100%; padding: 0px 24px;">
-            <div class="col-sm-6 col-md-6"> 
-                <button id="takeBtn accept" type="button" class="actionBtn take" v-on:click="Accept(time_out)">NHẬN</button> 
+        <div id="take"  class="row" style="width: 100%; padding: 0px 24px;">
+            <div id="takeBtn" class="col-sm-6 col-md-6"> 
+                <button id="accept" type="button" class="actionBtn take" v-on:click="Accept(time_out, username, Guest.ID)">NHẬN</button> 
             </div>
             <div class="col-sm-6 col-md-6"> 
-               <button id="takeBtn" type="button" class="actionBtn btn-danger" v-on:click="Refuse(Guest)">TỪ CHỐI</button> 
+               <button type="button" class="actionBtn btn-danger" v-on:click="Refuse(Guest)">TỪ CHỐI</button> 
             </div>
         </div>
     </div>
@@ -98,26 +94,29 @@
         <h1 class="notifTit">Chuyến xe đang nhận</h1>
         <div style="width: 100%; padding: 10px 24px 24px 24px">
             <div class="guestInfo" style="width: 100%">
-                <div class="guestName">Nguyễn Văn A</div>
-                <div class="guestAdd">215C Trương Công Định, phường 7, Q.Tân Bình</div>
+                <div class="guestName">{{Guest.name}}</div>
+                <div class="guestAdd">{{Guest.address}}</div>
             </div>
+             <div style="float: right; width: 20%; text-align: right; margin-top: -40px;">
+                    <button type="button" id="phoneBtn" class="phoneBtn"><img src="/static/pics/phone.png" width="15px"></button>
+                </div>
         </div>
         <div style="width: 100%; padding: 0px 24px;">
-            <button id="startBtn" type="button" class="actionBtn start">BẮT ĐẦU</button>
+            <button id="startBtn" v-on:click="Start(Guest)" type="button" class="actionBtn start">BẮT ĐẦU</button>
         </div>
     </div>
 
     <!--End-->
     <div id="end" class="notif" style="display: none;">
-        <h1 class="notifTit">Chuyến xe đang nhận</h1>
+        <h1 class="notifTit">Chuyến xe đang diễn ra</h1>
         <div style="width: 100%; padding: 10px 24px 24px 24px">
             <div class="guestInfo" style="width: 100%">
-                <div class="guestName">Nguyễn Văn A</div>
-                <div class="guestAdd">215C Trương Công Định, phường 7, Q.Tân Bình</div>
+                <div class="guestName">{{Guest.name}}</div>
+                <div class="guestAdd">{{Guest.address}}</div>
             </div>
         </div>
         <div style="width: 100%; padding: 0px 24px;">
-            <button id="endBtn" type="button" class="actionBtn end">KẾT THÚC</button>
+            <button  id="endBtn" type="button" class="actionBtn end" v-on:click ="Complete(coordDriver, username, Guest.ID)">KẾT THÚC</button>
         </div>
     </div>
 
@@ -149,16 +148,6 @@ $(document).ready(function() {
 
   $("#endNo").click(function() {
     $("#endModal").fadeOut("fast");
-  });
-
-  $("#takeBtn").click(function() {
-    $("#take").hide();
-    $("#start").show();
-  });
-
-  $("#startBtn").click(function() {
-    $("#start").hide();
-    $("#end").show();
   });
 
   $("#readyBtn").click(function() {
@@ -195,7 +184,7 @@ export default {
       map: {},
       behavior: "",
       Guest: {},
-        coordGuest: { lat: "", lng: "" },
+      coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
       pointDriver: "",
       platform: {},
@@ -205,7 +194,8 @@ export default {
       iconGuest: "",
       iconDriver: "",
       ui: {},
-      time_out: {}
+      time_out: {},
+      routeLine: ""
     };
   },
   created() {
@@ -217,7 +207,7 @@ export default {
     });
 
     var self = this;
-    this.iconGuest = new H.map.Icon("/static/icons/marker-driver.png");
+    this.iconGuest = new H.map.Icon("/static/icons/marker-passenger.png");
     this.iconDriver = new H.map.Icon("/static/icons/marker-driver.png");
 
     this.$getLocation({
@@ -247,14 +237,27 @@ export default {
         self.Guest = response[0];
         self.time_out = setTimeout(function() {
           alert("Hết thời gian phản hồi");
+          document.getElementById("take").style.display = "none";
         }, 10000);
       }
     });
 
+    EventBus.$on("CleanGuest", () => {
+      if (this.map.getObjects(this.markerGuest) != null) {
+        this.map.removeObject(this.markerGuest);
+      };
+      
+       if (this.map.getObjects(this.routeLine) != null) {
+        this.map.removeObject(this.routeLine);
+      };
+
+      this.map.setCenter(this.coordDriver);
+
+    });
+
     EventBus.$on("Route", () => {
-        
-        self.coordGuest.lat = self.Guest.guest_lat;
-        self.coordGuest.lng = self.Guest.guest_lng;
+      self.coordGuest.lat = self.Guest.guest_lat;
+      self.coordGuest.lng = self.Guest.guest_lng;
       self.markerGuest = new H.map.Marker(self.coordGuest, {
         icon: self.iconGuest
       });
@@ -279,13 +282,17 @@ export default {
             linestring.pushLatLngAlt(parts[0], parts[1]);
           });
           // Create a polyline to display the route:
-          var routeLine = new H.map.Polyline(linestring, {
+          self.routeLine = new H.map.Polyline(linestring, {
             style: { strokeColor: "#0FA9D6", lineWidth: 10 }
           });
           // Add the route polyline and the two markers to the map:
-          self.map.addObjects([routeLine, self.markerDriver, self.markerGuest]);
+          self.map.addObjects([
+            self.routeLine,
+            self.markerDriver,
+            self.markerGuest
+          ]);
           // Set the map's viewport to make the whole route visible:
-          self.map.setViewBounds(routeLine.getBounds());
+          self.map.setViewBounds(self.routeLine.getBounds());
         }
       });
     });
@@ -348,7 +355,6 @@ export default {
     },
     Ready(coordDriver, username) {
       document.getElementById("imgCurrent").style.marginTop = "200px";
-      // document.getElementById("hereMap").style.height= 400 + "px";
 
       //notification to server
       axios.post(
@@ -376,6 +382,8 @@ export default {
           }
         }
       );
+
+      EventBus.$emit("CleanGuest");
     },
     Standby(username) {
       document.getElementById("take").style.display = "none";
@@ -395,22 +403,45 @@ export default {
           }
         }
       );
+
+      alert("STANDBY");
     },
-    Accept(timeout) {
+    Accept(timeout, username, guestID) {
+      document.getElementById("take").style.display = "none";
+      document.getElementById("start").style.display = "block";
+
       window.clearTimeout(timeout);
       EventBus.$emit("Route");
+      axios.post(
+        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        {
+          status: "BUSY",
+          username: username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
+
+      var params = {
+        status: "hasBike",
+        ID: guestID
+      };
+      socket.emit("updateStatusRequestBooking", params);
     },
     Refuse(Guest) {
-        alert(JSON.stringify(Guest));
-        var IDGuest = {
-            ID: Guest.ID,
-            lat: Guest.guest_lat,
-            lng: Guest.guest_lng
-        }
+      document.getElementById("take").style.display = "none";
+      var IDGuest = {
+        ID: Guest.ID,
+        lat: Guest.guest_lat,
+        lng: Guest.guest_lng
+      };
       axios
         .post(
           "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
-           IDGuest,
+          IDGuest,
           {
             headers: {
               "x-access-token": this.$localStorage.get("access_token")
@@ -420,20 +451,39 @@ export default {
         .then(response => {
           if (response.data.msg == "verify success!") {
             alert("Đã từ chối");
+          } else {
+            alert("Đã xảy ra lỗi");
           }
-          else {
-           alert("Đã xảy ra lỗi");
-        }})
+        })
         .catch(err => {
           alert(err);
         });
-        
+    },
+    Start(Guest) {
+      document.getElementById("start").style.display = "none";
+      document.getElementById("end").style.display = "block";
+      document.getElementById("hereMap").style.display = "none";
+
+      var params = {
+        status: "moving",
+        ID: Guest.ID
+      };
+      socket.emit("updateStatusRequestBooking", params);
+    },
+    Complete(coordDriver, username, guestID) {
+      var params = {
+        status: "complete",
+        ID: guestID
+      };
+      socket.emit("updateStatusRequestBooking", params);
+      document.getElementById("end").style.display = "none";
+      document.getElementById("hereMap").style.display = "block";
+
+      this.Ready(coordDriver, username);
     }
   }
 };
 </script>
 
-<style>
-@import "vue-countdown-component/dist/vue-countdown.min.css";
-</style>
+
 
