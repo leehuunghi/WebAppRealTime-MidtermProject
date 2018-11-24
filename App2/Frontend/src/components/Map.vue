@@ -221,6 +221,14 @@ export default {
                 false
               );
 
+              //set data to send to server
+              this.$session.set("ID", {
+                ID: id,
+                lat: +self.lat,
+                lng: +self.lng,
+                usernameDriver: ""
+              });
+
               this.marker.addEventListener(
                 "drag",
                 function(ev) {
