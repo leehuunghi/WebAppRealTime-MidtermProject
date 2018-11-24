@@ -72,6 +72,13 @@ $(document).ready(function() {
   $("#tryAgain").click(function() {
     $("#modal").fadeOut("fast");
   });
+  $("#tryAgain-m").click(function() {
+    $("#modalFail").fadeOut();
+  });
+
+  $("#close-m").click(function() {
+    $("#modalSucceed").fadeOut();
+  });
 });
 import axios from "axios";
 import md5 from "crypto-md5";

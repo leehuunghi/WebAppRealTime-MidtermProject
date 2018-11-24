@@ -33,16 +33,6 @@
 </template>
 
 <script>
-$(document).ready(function(){
-    $("#tryAgain").click(function() {
-  $("#modalFail").fadeOut();
-});
-
-$("#close").click(function() {
-  $("#modalSucceed").fadeOut();
-});
-
-})
 
 import Request from "./Request";
 import HereMap from "./Map";

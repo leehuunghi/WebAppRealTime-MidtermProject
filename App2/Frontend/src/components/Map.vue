@@ -11,7 +11,7 @@
                         <p>Không tìm thấy địa điểm.</p>
                     </div>
                     <div style="text-align: right">
-                        <button id="tryAgain" type="button" class="mdBtn">Thử lại</button>
+                        <button id="tryAgain-m" v-on:click="tryClose()" type="button" class="mdBtn">Thử lại</button>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                         <p>Định vị thành công.</p>
                     </div>
                     <div style="text-align: right">
-                        <button id="close" type="button" class="mdBtn">ĐÓNG</button>
+                        <button id="close-m" v-on:click="closeClose()" type="button" class="mdBtn">ĐÓNG</button>
                     </div>
                 </div>
             </div>
@@ -78,14 +78,6 @@ $(document).ready(function() {
     } else {
       $("#listAddressSuggest").hide();
     }
-  })
-
-  $("#tryAgain").click(function() {
-    $("#modalFail").fadeOut();
-  });
-
-  $("#close").click(function() {
-    $("#modalSucceed").fadeOut();
   });
 });
 
@@ -128,7 +120,7 @@ export default {
     EventBus.$on("sendId", (id, _address, _note) => {
       this.IDCustomer = id;
       this.AddressCustomer = _address;
-      if (_note=="undefined") _note="";
+      if (_note == "undefined") _note = "";
       this.NoteCustomer = _note;
       var self = this;
       var _lat, _lng, suggestAddress, urlGetAddress, urlGetAddressFromCoord;
@@ -267,6 +259,12 @@ export default {
   //   this.$emit("AddressCustomer", this.AddressCustomer);
   // },
   methods: {
+    tryClose: function(){
+      $("#modalFail").fadeOut();
+    },
+    closeClose: function(){
+      $("#modalSucceed").fadeOut();
+    },
     Located: function(IDCustomer) {
       EventBus.$emit("sendId", null, null, null);
       axios
