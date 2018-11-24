@@ -170,7 +170,8 @@ export default {
               this.$session.set("ID", {
                 ID: id,
                 lat: _lat,
-                lng: _lng
+                lng: _lng,
+                usernameDriver: ""
               });
 
               this.marker = new H.map.Marker(self.coord, { icon: self.icon });
