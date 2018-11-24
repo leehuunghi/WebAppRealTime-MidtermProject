@@ -85,7 +85,7 @@
                 <button id="accept" type="button" class="actionBtn take" v-on:click="Accept(time_out, username, Guest.ID)">NHẬN</button> 
             </div>
             <div class="col-sm-6 col-md-6"> 
-               <button type="button" class="actionBtn btn-danger" v-on:click="Refuse(Guest)">TỪ CHỐI</button> 
+               <button type="button" class="actionBtn btn-danger" v-on:click="Refuse(time_out, Guest, username)">TỪ CHỐI</button> 
             </div>
         </div>
     </div>
@@ -174,7 +174,6 @@ import axios from "axios";
 
 var socket = require("socket.io-client")("http://172.168.10.107:1412");
 socket.on("connect", function() {});
-socket.emit("subcriseDriver");
 
 export default {
   name: "Main",
@@ -200,6 +199,8 @@ export default {
   },
   created() {
     this.username = this.$session.get("username");
+
+    socket.emit("subcriseDriver", username);
 
     this.platform = new H.service.Platform({
       app_id: "SxxR970XbZjWq11DxSea",
@@ -238,6 +239,7 @@ export default {
         self.time_out = setTimeout(function() {
           alert("Hết thời gian phản hồi");
           document.getElementById("take").style.display = "none";
+          self.Refuse(self.timeout, self.Guest, self.username);
         }, 10000);
       }
     });
@@ -245,14 +247,13 @@ export default {
     EventBus.$on("CleanGuest", () => {
       if (this.map.getObjects(this.markerGuest) != null) {
         this.map.removeObject(this.markerGuest);
-      };
-      
-       if (this.map.getObjects(this.routeLine) != null) {
+      }
+
+      if (this.map.getObjects(this.routeLine) != null) {
         this.map.removeObject(this.routeLine);
-      };
+      }
 
       this.map.setCenter(this.coordDriver);
-
     });
 
     EventBus.$on("Route", () => {
@@ -431,17 +432,25 @@ export default {
       };
       socket.emit("updateStatusRequestBooking", params);
     },
-    Refuse(Guest) {
+    Refuse(timeout, Guest, username) {
       document.getElementById("take").style.display = "none";
+
+      window.clearTimeout(timeout);
       var IDGuest = {
         ID: Guest.ID,
         lat: Guest.guest_lat,
-        lng: Guest.guest_lng
+        lng: Guest.guest_lng,
+        usernameDriver: username
       };
       axios
         .post(
           "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
-          IDGuest,
+          {
+            ID: Guest.ID,
+            lat: Guest.guest_lat,
+            lng: Guest.guest_lng,
+            usernameDriver: username
+          },
           {
             headers: {
               "x-access-token": this.$localStorage.get("access_token")
