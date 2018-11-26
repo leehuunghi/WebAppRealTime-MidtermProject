@@ -46,7 +46,7 @@
                             <div id="listAddressSuggest" class="sugFrame" style="display: none;">
                                 <div v-for="item in suggests" :key="item.id" style="font-size: 14px;">
                                 
-                                  <span id="sug" v-on:click="ChangeAddress(item.label)">{{item.label}}</span>      
+                                  <span id="sug" v-on:click="ChangeAddress(item.label, NoteCustomer, IDCustomer)">{{item.label}}</span>      
                                   
                                 </div>
                             </div>
@@ -278,7 +278,7 @@ export default {
       EventBus.$emit("sendId", null, null, null);
       axios
         .post(
-          "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
+          "http://192.168.0.45:3000/api/bookingBike/verifyRequestBooking",
           this.$session.get("ID"),
           {
             headers: {
@@ -310,9 +310,9 @@ export default {
         this.suggests = result.data.suggestions;
       });
     },
-    ChangeAddress(label) {
+    ChangeAddress(label, note, id) {
       document.getElementById("listAddressSuggest").style.display = "none";
-      EventBus.$emit("sendId", "", label, "");
+      EventBus.$emit("sendId", id , label, note);
       $("#locateBtn").fadeIn();
     }
   },
