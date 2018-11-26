@@ -38,11 +38,13 @@ router.get('/loadAllRequestBooking', (req, res) => {
 router.get('/requestBookingEvent', events.subscribeRequestBooking);
 
 router.post('/verifyRequestBooking', (req, res) => {
+    console.log(req.body);
     var location = {
         ID: req.body.ID,
         lat: req.body.lat,
         lng: req.body.lng,
-        status: 'verify'
+        status: 'verify',
+        usernameDriver: req.body.usernameDriver
     }
     socket.emit('updateStatusBookingEvent', {
         ID: location.ID,
@@ -66,6 +68,7 @@ router.post('/verifyRequestBooking', (req, res) => {
 })
 
 router.post('/book', (req, res) => {
+    console.log(req.body);
     bookingBikeRepo.add(req.body).then(value => {
         bookingBikeRepo.loadBookingBikeById(value.insertId).then(bookingBike => {
             events.publishRequestBooking(bookingBike);
@@ -83,6 +86,17 @@ router.post('/book', (req, res) => {
             success: 0
         })
         res.end('View error log on console');
+    })
+})
+
+router.post('/getInfoRequestByRequestID', (req, res) => {
+    bookingBikeRepo.getInfoRequestByRequestID(req.body.ID).then(value => {
+        res.status = 200;
+        res.json = {
+            requestInfo: value[0]
+        }
+    }).catch(err => {
+        console.log(err);
     })
 })
 

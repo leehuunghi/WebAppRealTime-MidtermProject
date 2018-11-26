@@ -21,6 +21,7 @@ exports.login = loginEntity => {
         sql = `select * from Employee where username = '${loginEntity.username}' and password = '${loginEntity.password}'`;
     } else if (loginEntity.role === `driver`) {
         sql = `select * from Driver where username = '${loginEntity.username}' and password = '${loginEntity.password}'`;
+        console.log(sql);
     }
     return db.load(sql);
 }

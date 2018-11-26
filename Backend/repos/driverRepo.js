@@ -22,8 +22,9 @@ var db = require('../fn/mysql-db');
 //     return db.insert(sql);
 // }
 
-exports.loadAllPositionDriverReady = driverEntity => {
-    var sql = `select ID, lat, lng from Driver where status = 'READY'`;
+exports.loadAllPositionDriverReady = driverUsername => {
+    var sql = `select username, lat, lng from Driver where status = 'READY' and username != '${driverUsername}'`;
+    console.log(sql);
     return db.load(sql);
 }
 
@@ -33,11 +34,12 @@ exports.getInfoDriverByDriverID = id => {
 }
 
 exports.updatePositionDriver = driverEntity => {
-    var sql = `update Driver set lat = ${driverEntity.lat}, lng = ${driverEntity.lng} where username = ${driverEntity.username}`;
+    var sql = `update Driver set lat = ${driverEntity.lat}, lng = ${driverEntity.lng} where username = '${driverEntity.username}'`;
+    console.log(sql);
     return db.insert(sql);
 }
 
 exports.updateStatusDriver = driverEntity => {
-    var sql = `update Driver set status = ${driverEntity.status} where username = ${driverEntity.username}`;
+    var sql = `update Driver set status = '${driverEntity.status}' where username = '${driverEntity.username}'`;
     return db.insert(sql);
 }

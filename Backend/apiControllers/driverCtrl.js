@@ -6,6 +6,7 @@ var router = express.Router();
 
 
 router.post('/updateLocationDriver', (req, res) => {
+    console.log(req.body);
     driverRepo.updatePositionDriver(req.body).then(() => {
         res.status = 200;
         res.json = {
@@ -25,11 +26,13 @@ router.post('/updateStatusDriver', (req, res) => {
         res.json = {
             msg: 'insert success'
         }
+        console.log(res.json.msg);
     }).catch(err => {
         res.status = 401;
         res.json = {
             msg: 'insert failed'
         }
+        console.log(res.json.msg);
     })
 })
 

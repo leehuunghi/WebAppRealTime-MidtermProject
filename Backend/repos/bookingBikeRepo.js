@@ -23,7 +23,8 @@ exports.lastInsertId = () => {
 }
 
 exports.updateStatusBooking = object => {
-    var sql = `UPDATE BookingBike SET status = ${object.status} where ID = ${object.ID}`;
+    var sql = `UPDATE BookingBike SET status = '${object.status}' where ID = ${object.ID}`;
+    console.log(sql);
     return db.load(sql);
 }
 
@@ -38,6 +39,11 @@ exports.loadBookingBikeById = id => {
 }
 
 exports.updateStatusDriver = object => {
-    var sql = `update Driver set status = ${object.status} where ID = ${object.ID}`;
+    var sql = `update Driver set status = '${object.status}' where ID = ${object.ID}`;
+    return db.load(sql);
+}
+
+exports.getInfoRequestByRequestID = id => {
+    var sql = `select * from BookingBike where ID = ${id}`;
     return db.load(sql);
 }

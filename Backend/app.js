@@ -5,6 +5,7 @@ var express = require('express'),
 
 var bookingBikeCtrl = require('./apiControllers/bookingBikeCtrl');
 var employeeCtrl = require('./apiControllers/employeeCtrl');
+var driverCtrl = require('./apiControllers/driverCtrl')
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
 var updateAccessToken = require('./repos/authRepo').updateAccessToken;
@@ -47,6 +48,8 @@ app.post('/api/updateAccessToken', (req, res) => {
 app.get('/api/a/', events.subscribeRequestBooking);
 app.use('/api/employee/', employeeCtrl);
 app.use('/api/bookingBike/', verifyAccessToken, bookingBikeCtrl);
+app.use('/api/driver/', driverCtrl);
+
 
 //websocket
 require('./websocket/identifyLocation_ws');
