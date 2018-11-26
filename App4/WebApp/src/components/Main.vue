@@ -116,7 +116,7 @@
             </div>
         </div>
         <div style="width: 100%; padding: 0px 24px;">
-            <button  id="endBtn" type="button" class="actionBtn end" v-on:click ="Complete(coordDriver, username, Guest.ID)">KẾT THÚC</button>
+            <button  id="endBtn" type="button" class="actionBtn end" v-on:click ="Complete(coordDriver, username, Guest)">KẾT THÚC</button>
         </div>
     </div>
 
@@ -172,7 +172,7 @@ $(document).ready(function() {
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://172.168.10.107:1412");
+var socket = require("socket.io-client")("http://192.168.0.45:1412");
 socket.on("connect", function() {});
 
 export default {
@@ -185,7 +185,7 @@ export default {
       Guest: {},
       coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
-      pointDriver: "",
+      // pointDriver: "",
       platform: {},
       View: [],
       markerGuest: "",
@@ -194,7 +194,8 @@ export default {
       iconDriver: "",
       ui: {},
       time_out: {},
-      routeLine: ""
+      routeLine: "",
+      isStart: false
     };
   },
   created() {
@@ -216,7 +217,6 @@ export default {
       timeout: Infinity, //defaults to Infinity
       maximumAge: 0 //defaults to 0
     }).then(coordinates => {
-      this.pointDriver = new H.geo.Point(coordinates.lat, coordinates.lng);
       EventBus.$emit("DriverLocation", coordinates);
     });
 
@@ -231,6 +231,20 @@ export default {
       });
       self.map.addObject(self.markerDriver);
       self.map.setCenter(self.coordDriver);
+
+      axios.post(
+        "http://192.168.0.45:3000/api/driver/updateLocationDriver",
+        {
+          lat: self.coordDriver.lat,
+          lng: self.coordDriver.lng,
+          username: self.username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
     });
 
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
@@ -245,6 +259,7 @@ export default {
     });
 
     EventBus.$on("CleanGuest", () => {
+      // this.isStart = msg;
       if (this.map.getObjects(this.markerGuest) != null) {
         this.map.removeObject(this.markerGuest);
       }
@@ -256,12 +271,19 @@ export default {
       this.map.setCenter(this.coordDriver);
     });
 
-    EventBus.$on("Route", () => {
+    EventBus.$on("Route", (msg) => {
       self.coordGuest.lat = self.Guest.guest_lat;
       self.coordGuest.lng = self.Guest.guest_lng;
-      self.markerGuest = new H.map.Marker(self.coordGuest, {
-        icon: self.iconGuest
-      });
+      if (msg == true) {
+        if (self.map.getObjects(self.routeLine) != null) {
+          self.map.removeObject(self.routeLine);
+        }
+      }
+      else{
+        self.markerGuest = new H.map.Marker(self.coordGuest, {
+          icon: self.iconGuest
+        });
+      }
       // Create the parameters for the routing request:
       var urlGetRouteShape = `https://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=${
         self.coordGuest.lat
@@ -322,15 +344,32 @@ export default {
         evt.currentPointer.viewportY
       );
 
+      var pointDriver = new H.geo.Point(
+        self.coordDriver.lat,
+        self.coordDriver.lng
+      );
       var pointNew = new H.geo.Point(coord.lat, coord.lng);
-      var distance = self.pointDriver.distance(pointNew);
+      var distance = pointDriver.distance(pointNew);
       if (distance > 100) alert("Vị trí được cập nhật xa hơn 100m");
       else {
         EventBus.$emit("DriverLocation", coord);
+        if (self.Guest != null) {
+         
+            EventBus.$emit("Route", true);
+          
+          var poiterGuest = new H.geo.Point(
+            self.Guest.guest_lat,
+            self.Guest.guest_lng
+          );
+          var distanceToGuest = pointNew.distance(poiterGuest);
+          if (distanceToGuest < 50) {
+            document.getElementById("startBtn").style.display = "block";
+          }
+        }
       }
     });
 
-    //receive booking
+    // //receive booking
     socket
       .on("hasRequestBooking", function(guest) {
         if (guest.ID != null) {
@@ -359,7 +398,7 @@ export default {
 
       //notification to server
       axios.post(
-        "http://172.168.10.107:3000/api/driver/updateLocationDriver",
+        "http://192.168.0.45:3000/api/driver/updateLocationDriver",
         {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
@@ -372,7 +411,7 @@ export default {
         }
       );
       axios.post(
-        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
         {
           status: "READY",
           username: username
@@ -389,11 +428,10 @@ export default {
     Standby(username) {
       document.getElementById("take").style.display = "none";
       document.getElementById("imgCurrent").style.marginTop = "500px";
-      // document.getElementById("hereMap").style.height = 600 + "px";
 
       //notification to server
       axios.post(
-        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -404,17 +442,16 @@ export default {
           }
         }
       );
-
-      alert("STANDBY");
     },
     Accept(timeout, username, guestID) {
       document.getElementById("take").style.display = "none";
       document.getElementById("start").style.display = "block";
+      document.getElementById("startBtn").style.display = "none";
 
       window.clearTimeout(timeout);
-      EventBus.$emit("Route");
+      EventBus.$emit("Route", false);
       axios.post(
-        "http://172.168.10.107:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
         {
           status: "BUSY",
           username: username
@@ -431,6 +468,19 @@ export default {
         ID: guestID
       };
       socket.emit("updateStatusRequestBooking", params);
+
+      axios.post(
+        "http://192.168.0.45:3000/api/driver/driverAcceptBooking",
+        {
+          guestID: guestID,
+          driverUsername: username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
     },
     Refuse(timeout, Guest, username) {
       document.getElementById("take").style.display = "none";
@@ -444,7 +494,7 @@ export default {
       };
       axios
         .post(
-          "http://172.168.10.107:3000/api/bookingBike/verifyRequestBooking",
+          "http://192.168.0.45:3000/api/bookingBike/verifyRequestBooking",
           {
             ID: Guest.ID,
             lat: Guest.guest_lat,
@@ -471,23 +521,29 @@ export default {
     Start(Guest) {
       document.getElementById("start").style.display = "none";
       document.getElementById("end").style.display = "block";
-      document.getElementById("hereMap").style.display = "none";
+      // document.getElementById("hereMap").style.display = "none";
 
       var params = {
         status: "moving",
         ID: Guest.ID
       };
       socket.emit("updateStatusRequestBooking", params);
+
+      // this.Ready();
+
+      // EventBus.$emit("CleanGuest");
+      EventBus.$emit("Route", true);
     },
-    Complete(coordDriver, username, guestID) {
+    Complete(coordDriver, username, Guest) {
       var params = {
         status: "complete",
-        ID: guestID
+        ID: Guest.ID
       };
       socket.emit("updateStatusRequestBooking", params);
       document.getElementById("end").style.display = "none";
       document.getElementById("hereMap").style.display = "block";
 
+      Guest = "";
       this.Ready(coordDriver, username);
     }
   }
