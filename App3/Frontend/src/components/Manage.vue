@@ -85,12 +85,13 @@
                 <div class="col-md-2">{{item.name}}</div>
                 <div class="col-md-3">{{item.address}}</div>
                 <div class="col-md-2">{{item.time}}</div>
-                <div class="col-md-2 notLocated" v-switch="item.status">
-                   <div v-case="'waiting'">Chưa được định vị</div>
-                   <div v-case="'verify'">Đã định vị xong</div>
-                   <div v-case="'hasBike'">Đã có xe nhận</div>
-                   <div v-case="'moving'">Đang di chuyển</div>
-                   <div v-case="'complete'">Đã hoàn thành</div>
+                <div class="col-md-2">
+                   <div v-if="item.status === 'verify'" style="color: #0094FF">Đã định vị xong</div>
+                   <div v-if="item.status === 'hasBike'" style="color: #FFA500 ">Đã có xe nhận</div>
+                   <div v-if="item.status === 'moving'"  style="color: #FF0000 ">Đang di chuyển</div>
+                   <div v-if="item.status === 'complete'" style="color: #15CE1C">Đã hoàn thành</div>
+                   <div v-if="item.status === 'waiting'" style="color: #696969 ">Chưa được định vị</div>
+
 
                 </div>
                 <div v-if="item.driverID != null" class="col-md-1" id="driverid" style="color: #888; cursor: pointer;" 
@@ -139,22 +140,15 @@ $(document).ready(function(){
 import io from "socket.io-client";
 import VueMoment from "moment";
 import axios from "axios";
-import { vSwitch, vCase, vDefault } from "v-switch-case";
 
-var socket = require("socket.io-client")("http://192.168.1.11:3030");
+var socket = require("socket.io-client")("http://192.168.1.5:3030");
 socket.on("connect", function() {});
 
 export default {
   name: "Manage",
-  directives: {
-    switch: vSwitch,
-    case: vCase,
-    default: vDefault
-  },
   data() {
     return {
       requests: [],
-      detail: false,
       isShow: false,
       driver: ""
     };
@@ -163,7 +157,7 @@ export default {
     var self = this;
     var access_token = this.$localStorage.get("access_token");
     axios
-      .get("http://192.168.1.11:3000/api/bookingBike/loadAllRequestBooking", {
+      .get("http://192.168.1.5:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
           "x-access-token": access_token
         }
@@ -190,6 +184,7 @@ export default {
 
     //receive information to update status
     socket.on("updateStatusBookingEvent", function(data) {
+
       for (let index = 0; index < self.requests.length; index++) {
         if (self.requests[index].ID == data.ID) {
           self.requests[index].status = data.status;
@@ -210,8 +205,8 @@ export default {
   },
   methods: {
     DetailMap(item) {
+        alert(JSON.stringify(item));
       this.$session.set("Request", item);
-      this.$emit("mapRouter", true);
       this.$router.replace({ name: "MapRouter" });
     },
     InfoDriver(driverID) {

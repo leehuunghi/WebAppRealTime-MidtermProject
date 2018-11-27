@@ -11,12 +11,12 @@
             </div>
             <div class="col-md-2" style="text-align: right;">
                 <div>
-                    <button class="logoutBtn-r">ĐĂNG XUẤT</button>
+                    <button class="logoutBtn-r" v-on:click="LogOut()">ĐĂNG XUẤT</button>
                 </div>
             </div>
         </div>
     </div>
-   <div ref="map" style="width: 100%; height: 600px;"></div>
+   <div ref="map" style="width: 100%; height: 500px;"></div>
 </div>
 </template>
 
@@ -24,7 +24,7 @@
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.1.11:3030");
+var socket = require("socket.io-client")("http://192.168.1.5:3030");
 
 export default {
   name: "MapRouter",
@@ -61,13 +61,16 @@ export default {
     this.iconDriver = new H.map.Icon("/static/icons/marker-driver.png");
 
     //Information guest
+
     this.InfoGuest = this.$session.get("Request");
-
     socket.emit("getInfoDriverByDriverID", this.InfoGuest.driverID);
-
     //set coordinates marker guest
     this.coordGuest.lat = this.InfoGuest.guest_lat;
     this.coordGuest.lng = this.InfoGuest.guest_lng;
+    
+     this.markerGuest = new H.map.Marker(this.coordGuest, {
+      icon: this.iconGuest
+    });
 
     //get information driver
     socket.on("connect", function() {});
@@ -155,12 +158,8 @@ export default {
       new H.mapevents.MapEvents(this.map)
     );
 
-    this.markerGuest = new H.map.Marker(this.coordGuest, {
-      icon: this.iconGuest
-    });
-
-    this.map.setCenter(this.coordGuest);
     this.map.addObject(this.markerGuest);
+    this.map.setCenter(this.coordGuest);
 
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
 
@@ -190,9 +189,13 @@ export default {
   },
   methods: {
     Back() {
-      this.$emit("mapRouter", false);
       this.$router.replace({ name: "Manage" });
-    }
+    },
+     LogOut() {
+      this.$localStorage.remove("access-token");
+      this.$localStorage.remove("refresh-token");
+      this.$router.replace({ name: "FormLogin" });
+     }
   }
 };
 </script>
