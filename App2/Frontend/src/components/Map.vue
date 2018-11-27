@@ -224,8 +224,8 @@ export default {
               //set data to send to server
               this.$session.set("ID", {
                 ID: id,
-                lat: +self.lat,
-                lng: +self.lng,
+                lat: +self.coord.lat,
+                lng: +self.coord.lng,
                 usernameDriver: ""
               });
 
@@ -264,9 +264,6 @@ export default {
     );
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
   },
-  // updated() {
-  //   this.$emit("AddressCustomer", this.AddressCustomer);
-  // },
   methods: {
     tryClose: function(){
       $("#modalFail").fadeOut();
