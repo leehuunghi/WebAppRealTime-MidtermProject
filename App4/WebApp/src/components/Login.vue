@@ -55,10 +55,6 @@ $(document).ready(function() {
       $("#password").addClass("errorPH");
       $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
     }
-    // } else {
-    //   // $("#signin").submit();
-    //   // $("#modal").fadeIn("fast");
-    // }
   });
   $("#username").focusout(function() {
     if ($("#username").val() == "") {
@@ -107,20 +103,28 @@ export default {
   },
   methods: {
     sendLogin() {
+      var flag=true;
       if ($("#username").val() == "") {
         $("#username").addClass("redBorder");
         $("#username").addClass("errorPH");
         $("#username").attr("placeholder", "Vui lòng nhập tên đăng nhập");
+        $("#username").addClass("errorShake");
+        setTimeout(function(){$("#username").removeClass("errorShake")},500);
+        flag=false;
       }
       if ($("#password").val() == "") {
         $("#password").addClass("redBorder");
         $("#password").addClass("errorPH");
         $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
-      } else {
+        $("#password").addClass("errorShake");
+        setTimeout(function(){$("#password").removeClass("errorShake")},500);
+        flag=false;
+      } 
+        if (flag==true) {
         var passmd5 = md5($("#password").val());
         this.formdata.password = passmd5;
         axios
-          .post("http://192.168.0.45:3000/api/employee/login", this.formdata)
+          .post("http://192.168.0.110:3000/api/employee/login", this.formdata)
           .then(response => {
             if (response.data.auth) {
               this.auth = response.data.auth;
@@ -134,7 +138,7 @@ export default {
                 "refresh_token",
                 response.data.refresh_token
               );
-              this.$session.set("username", this.formdata.username);
+              this.$localStorage.set("username", this.formdata.username);
               this.$router.replace({ name: "Main" });
             }
             else{
@@ -143,6 +147,7 @@ export default {
           })
           .catch(err => {
             alert(err);
+          
           });
       }
     }

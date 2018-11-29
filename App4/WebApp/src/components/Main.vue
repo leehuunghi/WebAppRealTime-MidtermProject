@@ -13,7 +13,7 @@
                         </div>
                         <div style="text-align: right">
                             <button id="signoutNo" type="button" class="mdBtn-no">HỦY</button>
-                            <button id="signoutYes" type="button" class="mdBtn">ĐĂNG XUẤT</button>
+                            <button id="signoutYes" type="button" v-on:click="LogOut(username)" class="mdBtn">ĐĂNG XUẤT</button>
                         </div>
                     </div>
                 </div>
@@ -45,12 +45,12 @@
         <div style="width: 15%">
             <img src="/static/pics/logo-mobile-white.png" width="37.5px">
         </div>
-        <div style="width: 40%;">
+        <div style="width: 40%;" v-on:click="LogOut(username)">
             <span id="signoutBtn" class="logoutBtn">ĐĂNG XUẤT</span>
         </div>
         <div style="width: 45%;">
             <div id="readyBtn" class="toggleOff" style="float: left; border-radius: 50px 0px 0px 50px;" 
-            v-on:click ="Ready(coordDriver, username)">
+            v-on:click ="Ready(coordDriver, username, Guest)">
                 Ready
             </div>
             <div id="standbyBtn" class="toggleOn" style="float: left; border-radius: 0px 50px 50px 0px;"
@@ -63,7 +63,7 @@
     <!-- here map -->
     <div ref="map" style="width: 100%; height: 600px; position: relative" id="hereMap">
         <img src="/static/icons/current-location.png" alt="" width="50px" id="imgCurrent"
-            style="position: absolute; z-index: 100; margin-left: 300px; margin-top:500px" v-on:click="CurrentLocation">
+            style="position: absolute; z-index: 100; margin-left: 300px; margin-top:500px" v-on:click="CurrentLocation()">
     </div>
 
     <!--Take-->
@@ -97,9 +97,6 @@
                 <div class="guestName">{{Guest.name}}</div>
                 <div class="guestAdd">{{Guest.address}}</div>
             </div>
-             <div style="float: right; width: 20%; text-align: right; margin-top: -40px;">
-                    <button type="button" id="phoneBtn" class="phoneBtn"><img src="/static/pics/phone.png" width="15px"></button>
-                </div>
         </div>
         <div style="width: 100%; padding: 0px 24px;">
             <button id="startBtn" v-on:click="Start(Guest)" type="button" class="actionBtn start">BẮT ĐẦU</button>
@@ -172,7 +169,7 @@ $(document).ready(function() {
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.0.45:1412");
+var socket = require("socket.io-client")("http://192.168.0.110:1412");
 socket.on("connect", function() {});
 
 export default {
@@ -194,19 +191,18 @@ export default {
       iconDriver: "",
       ui: {},
       time_out: {},
-      routeLine: "",
+      routeLine: null,
       isStart: false
     };
   },
   created() {
-    this.username = this.$session.get("username");
-
-    socket.emit("subcriseDriver", username);
-
-    this.platform = new H.service.Platform({
+     this.platform = new H.service.Platform({
       app_id: "SxxR970XbZjWq11DxSea",
       app_code: "ZIgTe3WyzSsHXAsKjPBljg"
     });
+
+    this.username = this.$localStorage.get("username");
+    socket.emit("subcriseDriver", this.username);
 
     var self = this;
     this.iconGuest = new H.map.Icon("/static/icons/marker-passenger.png");
@@ -222,18 +218,19 @@ export default {
 
     EventBus.$on("DriverLocation", coordinates => {
       if (this.map.getObjects(this.markerDriver) != null) {
-        this.map.removeObject(this.markerDriver);
+        if (this.map.getObjects(this.markerDriver) != "") {
+          this.map.removeObject(this.markerDriver);
+        }
       }
 
       self.coordDriver = coordinates;
       self.markerDriver = new H.map.Marker(self.coordDriver, {
         icon: self.iconDriver
       });
-      self.map.addObject(self.markerDriver);
       self.map.setCenter(self.coordDriver);
-
+      self.map.addObject(self.markerDriver);
       axios.post(
-        "http://192.168.0.45:3000/api/driver/updateLocationDriver",
+        "http://192.168.0.110:3000/api/driver/updateLocationDriver",
         {
           lat: self.coordDriver.lat,
           lng: self.coordDriver.lng,
@@ -244,7 +241,9 @@ export default {
             "x-access-token": this.$localStorage.get("access_token")
           }
         }
-      );
+      ).catch(err => {
+        alert(err);
+      });
     });
 
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
@@ -259,9 +258,8 @@ export default {
     });
 
     EventBus.$on("CleanGuest", () => {
-      // this.isStart = msg;
       if (this.map.getObjects(this.markerGuest) != null) {
-        this.map.removeObject(this.markerGuest);
+        this.map.removeObject(this.map.getObjects(this.markerGuest));
       }
 
       if (this.map.getObjects(this.routeLine) != null) {
@@ -331,11 +329,7 @@ export default {
     this.behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(this.map)
     );
-    this.markerDriver = new H.map.Marker(this.coordDriver, {
-      icon: this.iconDriver
-    });
-    this.map.setCenter(this.coordDriver);
-    this.map.addObject(this.markerDriver);
+
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
 
     this.map.addEventListener("tap", function(evt) {
@@ -353,10 +347,8 @@ export default {
       if (distance > 100) alert("Vị trí được cập nhật xa hơn 100m");
       else {
         EventBus.$emit("DriverLocation", coord);
-        if (self.Guest != null) {
-         
+        if (self.Guest.ID != null) {
             EventBus.$emit("Route", true);
-          
           var poiterGuest = new H.geo.Point(
             self.Guest.guest_lat,
             self.Guest.guest_lng
@@ -366,22 +358,33 @@ export default {
             document.getElementById("startBtn").style.display = "block";
           }
         }
+        axios.post(
+        "http://192.168.0.110:3000/api/driver/updateLocationDriver",
+        {
+          lat: self.coordDriver.lat,
+          lng: self.coordDriver.lng,
+          username: self.username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
       }
     });
 
-    // //receive booking
+    //receive booking
     socket
       .on("hasRequestBooking", function(guest) {
         if (guest.ID != null) {
           document.getElementById("take").style.display = "block";
+          document.getElementById("imgCurrent").style.marginTop = "200px";
 
           //sent ID request to get info request
           socket.emit("getInfoRequestByRequestID", guest.ID);
         }
       })
-      .catch(err => {
-        alert(err);
-      });
   },
   methods: {
     CurrentLocation() {
@@ -391,14 +394,14 @@ export default {
         maximumAge: 0 //defaults to 0
       }).then(coordinates => {
         EventBus.$emit("DriverLocation", coordinates);
+        
       });
     },
-    Ready(coordDriver, username) {
-      document.getElementById("imgCurrent").style.marginTop = "200px";
-
+    Ready(coordDriver, username, Guest) {
+      alert(this.$localStorage.get("access_token"));
       //notification to server
       axios.post(
-        "http://192.168.0.45:3000/api/driver/updateLocationDriver",
+        "http://192.168.0.110:3000/api/driver/updateLocationDriver",
         {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
@@ -411,7 +414,7 @@ export default {
         }
       );
       axios.post(
-        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
         {
           status: "READY",
           username: username
@@ -423,7 +426,10 @@ export default {
         }
       );
 
-      EventBus.$emit("CleanGuest");
+      alert(Guest.ID);
+      if (Guest.ID != null){
+        EventBus.$emit("CleanGuest");
+      }
     },
     Standby(username) {
       document.getElementById("take").style.display = "none";
@@ -431,7 +437,7 @@ export default {
 
       //notification to server
       axios.post(
-        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -444,14 +450,14 @@ export default {
       );
     },
     Accept(timeout, username, guestID) {
+      window.clearTimeout(timeout);
       document.getElementById("take").style.display = "none";
       document.getElementById("start").style.display = "block";
       document.getElementById("startBtn").style.display = "none";
 
-      window.clearTimeout(timeout);
       EventBus.$emit("Route", false);
       axios.post(
-        "http://192.168.0.45:3000/api/driver/updateStatusDriver",
+        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
         {
           status: "BUSY",
           username: username
@@ -470,9 +476,9 @@ export default {
       socket.emit("updateStatusRequestBooking", params);
 
       axios.post(
-        "http://192.168.0.45:3000/api/driver/driverAcceptBooking",
+        "http://192.168.0.110:3000/api/bookingBike/driverAcceptBooking",
         {
-          guestID: guestID,
+          ID: guestID,
           driverUsername: username
         },
         {
@@ -483,9 +489,10 @@ export default {
       );
     },
     Refuse(timeout, Guest, username) {
+       window.clearTimeout(timeout);
       document.getElementById("take").style.display = "none";
 
-      window.clearTimeout(timeout);
+     
       var IDGuest = {
         ID: Guest.ID,
         lat: Guest.guest_lat,
@@ -494,7 +501,7 @@ export default {
       };
       axios
         .post(
-          "http://192.168.0.45:3000/api/bookingBike/verifyRequestBooking",
+          "http://192.168.0.110:3000/api/bookingBike/verifyRequestBooking",
           {
             ID: Guest.ID,
             lat: Guest.guest_lat,
@@ -521,7 +528,6 @@ export default {
     Start(Guest) {
       document.getElementById("start").style.display = "none";
       document.getElementById("end").style.display = "block";
-      // document.getElementById("hereMap").style.display = "none";
 
       var params = {
         status: "moving",
@@ -529,9 +535,6 @@ export default {
       };
       socket.emit("updateStatusRequestBooking", params);
 
-      // this.Ready();
-
-      // EventBus.$emit("CleanGuest");
       EventBus.$emit("Route", true);
     },
     Complete(coordDriver, username, Guest) {
@@ -543,8 +546,24 @@ export default {
       document.getElementById("end").style.display = "none";
       document.getElementById("hereMap").style.display = "block";
 
-      Guest = "";
-      this.Ready(coordDriver, username);
+      this.Ready(coordDriver, username, Guest);
+    },
+    LogOut(username){
+       this.$localStorage.remove("access-token");
+      this.$localStorage.remove("refresh-token");
+      axios.post(
+        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
+        {
+          status: "STANDBY",
+          username: username
+        },
+        {
+          headers: {
+            "x-access-token": this.$localStorage.get("access_token")
+          }
+        }
+      );
+      this.$router.replace({ name: "Login" });
     }
   }
 };

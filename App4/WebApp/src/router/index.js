@@ -9,11 +9,8 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      redirect: {
-          name: "Login"
-      }
-  },
+      path: '/'
+    },
     {
       path: '/login',
       name: 'Login',
