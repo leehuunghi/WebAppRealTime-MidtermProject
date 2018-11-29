@@ -120,7 +120,7 @@ export default {
         var passmd5 = md5($("#password").val());
         this.formdata.password = passmd5;
         axios
-          .post("http://192.168.0.110:3000/api/employee/login", this.formdata)
+          .post("http://172.16.8.51:3000/api/employee/login", this.formdata)
           .then(response => {
             if (response.data.auth) {
               this.auth = response.data.auth;
@@ -136,9 +136,12 @@ export default {
               );
               this.$router.replace({ name: "Manage" });
             }
+            else{
+                $("#modal").fadeIn("fast");
+            }
           })
           .catch(err => {
-            $("#modal").fadeIn("fast");
+            alert(err);
           });
       }
     }
