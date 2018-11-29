@@ -99,20 +99,28 @@ export default {
   },
   methods: {
     sendLogin() {
+      var flag=true;
       if ($("#username").val() == "") {
         $("#username").addClass("redBorder");
         $("#username").addClass("errorPH");
         $("#username").attr("placeholder", "Vui lòng nhập tên đăng nhập");
+        $("#username").addClass("errorShake");
+        setTimeout(function(){$("#username").removeClass("errorShake")},500);
+        flag=false;
       }
       if ($("#password").val() == "") {
         $("#password").addClass("redBorder");
         $("#password").addClass("errorPH");
         $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
-      } else {
+        $("#password").addClass("errorShake");
+        setTimeout(function(){$("#password").removeClass("errorShake")},500);
+        flag=false;
+      }
+      if (flag == true) {
         var passmd5 = md5($("#password").val());
         this.formdata.password = passmd5;
         axios
-          .post("http://192.168.1.5:3000/api/employee/login", this.formdata)
+          .post("http://192.168.0.110:3000/api/employee/login", this.formdata)
           .then(response => {
             if (response.data.auth) {
               this.auth = response.data.auth;

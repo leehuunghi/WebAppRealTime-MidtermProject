@@ -141,7 +141,7 @@ import io from "socket.io-client";
 import VueMoment from "moment";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.1.5:3030");
+var socket = require("socket.io-client")("http://192.168.0.110:3030");
 socket.on("connect", function() {});
 
 export default {
@@ -157,7 +157,7 @@ export default {
     var self = this;
     var access_token = this.$localStorage.get("access_token");
     axios
-      .get("http://192.168.1.5:3000/api/bookingBike/loadAllRequestBooking", {
+      .get("http://192.168.0.110:3000/api/bookingBike/loadAllRequestBooking", {
         headers: {
           "x-access-token": access_token
         }
@@ -195,6 +195,11 @@ export default {
 
     socket.on("getInfoDriverByDriverIDEvent", function(response) {
       self.driver = response[0];
+    });
+
+    //Update location driver 
+    socket.on("updateLocationDriverEvent", function(result) {
+      self.driver = result.data;
     });
 
     //receive new request

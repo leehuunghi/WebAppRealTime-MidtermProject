@@ -24,7 +24,7 @@
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.1.5:3030");
+var socket = require("socket.io-client")("http://192.168.0.110:3030");
 
 export default {
   name: "MapRouter",
