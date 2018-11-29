@@ -14,7 +14,6 @@ import VueGeolocation from 'vue-browser-geolocation';
 Vue.use(VueGeolocation);
 
 import VueLocalStorage from 'vue-localstorage'
-
 Vue.use(VueLocalStorage)
 
 Vue.use({
@@ -47,8 +46,6 @@ const options = {
 Vue.use(VueLogger, options);
 
 Vue.config.productionTip = false
-
-window.EventBus = new Vue();
 
 /* eslint-disable no-new */
 new Vue({

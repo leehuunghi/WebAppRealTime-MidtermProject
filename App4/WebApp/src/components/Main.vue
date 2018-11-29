@@ -27,7 +27,7 @@
               <button
                 id="signoutYes"
                 type="button"
-                v-on:click="LogOut(username)"
+                v-on:click="LogOut(username, map)"
                 class="mdBtn"
               >ĐĂNG XUẤT</button>
             </div>
@@ -71,7 +71,7 @@
       <div style="width: 15%">
         <img src="/static/pics/logo-mobile-white.png" width="37.5px">
       </div>
-      <div style="width: 40%;" v-on:click="LogOut(username)">
+      <div style="width: 40%;" v-on:click="LogOut(username, map)">
         <span id="signoutBtn" class="logoutBtn">ĐĂNG XUẤT</span>
       </div>
       <div style="width: 45%;">
@@ -205,7 +205,7 @@ $(document).ready(function() {
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://192.168.0.110:1412");
+var socket = require("socket.io-client")("http://172.16.8.51:1412");
 socket.on("connect", function() {});
 
 export default {
@@ -218,7 +218,6 @@ export default {
       Guest: {},
       coordGuest: { lat: "", lng: "" },
       coordDriver: { lat: "", lng: "" },
-      // pointDriver: "",
       platform: {},
       View: [],
       markerGuest: "",
@@ -249,10 +248,12 @@ export default {
       timeout: Infinity, //defaults to Infinity
       maximumAge: 0 //defaults to 0
     }).then(coordinates => {
+      alert("created");
       EventBus.$emit("DriverLocation", coordinates);
     });
 
     EventBus.$on("DriverLocation", coordinates => {
+      alert("DriverLocation");
       if (this.map.getObjects(this.markerDriver) != null) {
         if (this.map.getObjects(this.markerDriver) != "") {
           this.map.removeObject(this.markerDriver);
@@ -263,11 +264,10 @@ export default {
       self.markerDriver = new H.map.Marker(self.coordDriver, {
         icon: self.iconDriver
       });
-      self.map.setCenter(self.coordDriver);
-      self.map.addObject(self.markerDriver);
-      axios
+
+       axios
         .post(
-          "http://192.168.0.110:3000/api/driver/updateLocationDriver",
+          "http://172.16.8.51:3000/api/driver/updateLocationDriver",
           {
             lat: self.coordDriver.lat,
             lng: self.coordDriver.lng,
@@ -275,6 +275,8 @@ export default {
           },
           {
             headers: {
+               'Content-Type': 'application/json;charset=UTF-8',
+               "Access-Control-Allow-Origin": "*",
               "x-access-token": this.$localStorage.get("access_token")
             }
           }
@@ -282,6 +284,11 @@ export default {
         .catch(err => {
           alert(err);
         });
+
+      self.map.setCenter(self.coordDriver);
+      self.map.addObject(self.markerDriver);
+
+     
     });
 
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
@@ -290,7 +297,7 @@ export default {
         self.time_out = setTimeout(function() {
           alert("Hết thời gian phản hồi");
           document.getElementById("take").style.display = "none";
-          self.Refuse(self.timeout, self.Guest, self.username);
+          self.Refuse(self.time_out, self.Guest, self.username);
         }, 10000);
       }
     });
@@ -369,8 +376,11 @@ export default {
 
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
 
-    this.map.addEventListener("tap", function(evt) {
-      var coord = self.map.screenToGeo(
+    this.map.addEventListener("tap", (evt) => EventBus.$emit("HandleTap", evt));
+
+      EventBus.$on("HandleTap", evt => {
+        alert("handle");
+       var coord = self.map.screenToGeo(
         evt.currentPointer.viewportX,
         evt.currentPointer.viewportY
       );
@@ -383,6 +393,7 @@ export default {
       var distance = pointDriver.distance(pointNew);
       if (distance > 100) alert("Vị trí được cập nhật xa hơn 100m");
       else {
+        alert("tap");
         EventBus.$emit("DriverLocation", coord);
         if (self.Guest.ID != null) {
           EventBus.$emit("Route", true);
@@ -395,24 +406,13 @@ export default {
             document.getElementById("startBtn").style.display = "block";
           }
         }
-        axios.post(
-          "http://192.168.0.110:3000/api/driver/updateLocationDriver",
-          {
-            lat: self.coordDriver.lat,
-            lng: self.coordDriver.lng,
-            username: self.username
-          },
-          {
-            headers: {
-              "x-access-token": this.$localStorage.get("access_token")
-            }
-          }
-        );
       }
+
     });
 
     //receive booking
-    socket.on("hasRequestBooking", function(guest) {
+    socket.on("hasRequestBookingEvent", function(guest) {
+      alert("hasRequestBooking");
       if (guest.ID != null) {
         document.getElementById("take").style.display = "block";
         document.getElementById("imgCurrent").style.marginTop = "200px";
@@ -424,11 +424,13 @@ export default {
   },
   methods: {
     CurrentLocation() {
+     
       this.$getLocation({
         enableHighAccuracy: false, //defaults to false
         timeout: Infinity, //defaults to Infinity
         maximumAge: 0 //defaults to 0
       }).then(coordinates => {
+         alert("btn");
         EventBus.$emit("DriverLocation", coordinates);
       });
     },
@@ -441,7 +443,7 @@ export default {
       }
       //notification to server
       axios.post(
-        "http://192.168.0.110:3000/api/driver/updateLocationDriver",
+        "http://172.16.8.51:3000/api/driver/updateLocationDriver",
         {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
@@ -454,7 +456,7 @@ export default {
         }
       );
       axios.post(
-        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
+        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
         {
           status: "READY",
           username: username
@@ -482,7 +484,7 @@ export default {
 
       //notification to server
       axios.post(
-        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
+        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -495,14 +497,14 @@ export default {
       );
     },
     Accept(timeout, username, guestID) {
-      window.clearTimeout(timeout);
       document.getElementById("take").style.display = "none";
       document.getElementById("start").style.display = "block";
       document.getElementById("startBtn").style.display = "none";
 
+      window.clearTimeout(timeout);
       EventBus.$emit("Route", false);
       axios.post(
-        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
+        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
         {
           status: "BUSY",
           username: username
@@ -521,7 +523,7 @@ export default {
       socket.emit("updateStatusRequestBooking", params);
 
       axios.post(
-        "http://192.168.0.110:3000/api/bookingBike/driverAcceptBooking",
+        "http://172.16.8.51:3000/api/bookingBike/driverAcceptBooking",
         {
           ID: guestID,
           driverUsername: username
@@ -545,7 +547,7 @@ export default {
       };
       axios
         .post(
-          "http://192.168.0.110:3000/api/bookingBike/verifyRequestBooking",
+          "http://172.16.8.51:3000/api/bookingBike/verifyRequestBooking",
           {
             ID: Guest.ID,
             lat: Guest.guest_lat,
@@ -592,11 +594,13 @@ export default {
 
       this.Ready(coordDriver, username, Guest);
     },
-    LogOut(username) {
+    LogOut(username, map) {
+      map.removeEventListener("tap", (evt) => EventBus.$emit("HandleTap", evt));
+
       this.$localStorage.remove("access-token");
       this.$localStorage.remove("refresh-token");
       axios.post(
-        "http://192.168.0.110:3000/api/driver/updateStatusDriver",
+        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -609,6 +613,7 @@ export default {
       );
       this.$router.replace({ name: "Login" });
     }
+ 
   }
 };
 </script>

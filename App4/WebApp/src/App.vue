@@ -16,7 +16,7 @@ export default {
     var access_token = this.$localStorage.get("access_token");
     if (access_token != null) {
       axios
-        .post("http://192.168.0.110:3000/api/me", "", {
+        .post("http://172.168.8.51:3000/api/me", "", {
           headers: {
             "x-access-token": access_token
           }
