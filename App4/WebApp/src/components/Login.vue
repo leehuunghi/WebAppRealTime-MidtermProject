@@ -11,7 +11,7 @@
                         <p>Tên đăng nhập hoặc mật khẩu không đúng.</p>
                     </div>
                     <div style="text-align: right">
-                        <button id="tryAgain" type="button" class="mdBtn">Nhập lại</button>
+                        <button id="tryAgain" type="button" class="mdBtn" v-on:click="TryAgain()">Nhập lại</button>
                     </div>
                 </div>
             </div>
@@ -80,9 +80,6 @@ $(document).ready(function() {
     $("#password").removeClass("errorPH");
     $("#password").attr("placeholder", "");
   });
-  $("#tryAgain").click(function() {
-    $("#modal").fadeOut("fast");
-  });
 });
 
 import axios from "axios";
@@ -150,6 +147,9 @@ export default {
           
           });
       }
+    },
+    TryAgain(){
+      $("#modal").fadeOut("fast");
     }
   }
 };
