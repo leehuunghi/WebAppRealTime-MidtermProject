@@ -72,9 +72,17 @@ export default {
       icon: this.iconGuest
     });
 
+    //Update location driver 
+    socket.on("updateLocationDriverEvent", function(result) {
+        alert(1);
+      self.driver = result;
+       alert("update location:" + JSON.stringify(self.driver));
+    });
+    
     //get information driver
     socket.on("connect", function() {});
     socket.on("getInfoDriverByDriverIDEvent", function(response) {
+      alert(JSON.stringify(response));
       _lat = response[0].lat;
       _lng = response[0].lng;
       self.coordDriver.lat = _lat;

@@ -8,8 +8,10 @@
 import axios from "axios";
 
 export default {
-  data: {
-    name: "App",
+  data() {
+    return{
+      name: "App",
+    }
   },
   created() {
     var access_token = this.$localStorage.get("access_token");

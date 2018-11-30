@@ -197,12 +197,6 @@ export default {
       self.driver = response[0];
     });
 
-    //Update location driver 
-    socket.on("updateLocationDriverEvent", function(result) {
-        alert("update location:" + JSON.stringify(result));
-      self.driver = result.data;
-    });
-
     //receive new request
     socket.on("addNewRequestBookingEvent", function(data) {
       data.time = VueMoment.unix(data.time).format("DD/MM/YYYY HH:mm");
@@ -211,7 +205,6 @@ export default {
   },
   methods: {
     DetailMap(item) {
-        alert(JSON.stringify(item));
       this.$session.set("Request", item);
       this.$router.replace({ name: "MapRouter" });
     },
