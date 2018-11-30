@@ -10,9 +10,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: {
-          name: "FormLogin"
-      }
   },
     {
       path: '/login',
