@@ -1,7 +1,7 @@
 <template>
 <div>
    <div class="coverBg">
-        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;">
+        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;" v-on:click="LogOut()">
             <button class="logoutBtn">ĐĂNG XUẤT<Table></Table></button>
         </div>
         <img id="cover" src="/static/pics/cover-receiver.png" style="width: 100%; height: auto; opacity: 1; margin-bottom: 0px;">
@@ -53,7 +53,7 @@ export default {
       axios
         .post("http://192.168.1.10:3000/api/bookingBike/book", this.formdata, {
             headers: {
-                'x-access-token':  this.$session.get('access_token')
+                'x-access-token':  this.$localStorage.get('access_token')
             }
         })
         .then(response => {
@@ -66,6 +66,11 @@ export default {
         .catch(err => {
           alert(err);
         });
+    },
+    LogOut(){
+        this.$localStorage.remove("access-token");
+      this.$localStorage.remove("refresh-token");
+      this.$router.replace({ name: "FormLogin" });
     }
   }
 };
