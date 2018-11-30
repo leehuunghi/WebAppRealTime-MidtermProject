@@ -36,7 +36,7 @@
     </div>  
 
    <div class="coverBg">
-        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;">
+        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;" v-on:click="LogOut()">
             <button class="logoutBtn">ĐĂNG XUẤT<Table></Table></button>
         </div>
         <img id="cover" src="/static/pics/cover-receiver.png" style="width: 100%; height: auto; opacity: 1; margin-bottom: 0px;">
@@ -191,6 +191,11 @@ export default {
           $("#modalFail").fadeIn();
         });
     }
+    },
+    LogOut(){
+        this.$localStorage.remove("access-token");
+      this.$localStorage.remove("refresh-token");
+      this.$router.replace({ name: "FormLogin" });
     }
   }
 };
