@@ -19,6 +19,16 @@ Vue.use({
   }
 })
 
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage)
+
+Vue.use({
+  install: function(Vue, options){
+      Vue.prototype.$jQuery = require('jquery'); // you'll have this.$jQuery anywhere in your vue project
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
