@@ -6,6 +6,10 @@ import router from './router'
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 
+import VueLocalStorage from 'vue-localstorage'
+
+Vue.use(VueLocalStorage)
+
 Vue.config.productionTip = false
 
 import VueLocalStorage from 'vue-localstorage'
