@@ -23,7 +23,12 @@
               <p>Bạn muốn đăng xuất?</p>
             </div>
             <div style="text-align: right">
-              <button id="signoutNo" type="button" class="mdBtn-no">HỦY</button>
+              <button
+                id="signoutNo"
+                type="button"
+                class="mdBtn-no"
+                v-on:click="signoutNoClick()"
+              >HỦY</button>
               <button
                 id="signoutYes"
                 type="button"
@@ -59,8 +64,43 @@
               <p>Chuyến đi đã hoàn thành?</p>
             </div>
             <div style="text-align: right">
-              <button id="endNo" type="button" class="mdBtn-no">HỦY</button>
-              <button id="endYes" type="button" class="mdBtn">KẾT THÚC</button>
+              <button id="endNo" type="button" class="mdBtn-no" v-on:click="endModalClose()">HỦY</button>
+              <button
+                id="endYes"
+                type="button"
+                class="mdBtn"
+                v-on:click="Complete(coordDriver, username, Guest)"
+              >KẾT THÚC</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Template Modal-->
+    <div
+      id="modal-template"
+      class="modal-backdrop"
+      style="background-color: rgba(0,0,0,0.5); display: none;"
+    >
+      <div
+        class="modal"
+        role="dialog"
+        style="display: block; padding-top: 200px; margin-left: 20px; margin-right: 20px;"
+      >
+        <div class="modal-dialog" role="document">
+          <div
+            class="modal-content"
+            style="padding: 20px; border: none !important; border-radius: 10px;"
+          >
+            <div>
+              <h5 class="mdTitle">Thông báo</h5>
+            </div>
+            <div class="mdDes">
+              <p id="modal-msg"></p>
+            </div>
+            <div style="text-align: right">
+              <button id="close-100m" type="button" class="mdBtn" v-on:click="closeMT()">ĐÓNG</button>
             </div>
           </div>
         </div>
@@ -71,8 +111,8 @@
       <div style="width: 15%">
         <img src="/static/pics/logo-mobile-white.png" width="37.5px">
       </div>
-      <div style="width: 40%;" v-on:click="LogOut(username, map)">
-        <span id="signoutBtn" class="logoutBtn">ĐĂNG XUẤT</span>
+      <div style="width: 40%;">
+        <span id="signoutBtn" class="logoutBtn" v-on:click="signoutBtnClick()">ĐĂNG XUẤT</span>
       </div>
       <div style="width: 45%;">
         <div
@@ -95,7 +135,7 @@
       <img
         src="/static/icons/current-location.png"
         alt
-        width="50px"
+        width="40px"
         id="imgCurrent"
         style="position: absolute; z-index: 100; margin-left: 300px; margin-top:500px"
         v-on:click="CurrentLocation()"
@@ -105,7 +145,6 @@
     <!--Take-->
     <div id="take" class="notif" style="display: none;">
       <h1 class="notifTit">Yêu cầu đặt xe</h1>
-      <h1 class="notifTitDes">Bạn có một yêu cầu đặt xe</h1>
       <div style="width: 100%; padding: 10px 24px 24px 24px">
         <div class="guestInfo" style="width: 100%">
           <div style="width: 80%;">
@@ -116,8 +155,8 @@
           </div>
         </div>
       </div>
-      <div id="take" class="row" style="width: 100%; padding: 0px 24px;">
-        <div id="takeBtn" class="col-sm-6 col-md-6">
+      <div id="take" class="row" style="width: 100%; padding: 0px 24px; margin-left: 0px;">
+        <div id="takeBtn" class="col-sm-6 col-md-6" style="width: 50%; ext-align: center;">
           <button
             id="accept"
             type="button"
@@ -125,7 +164,7 @@
             v-on:click="Accept(time_out, username, Guest.ID)"
           >NHẬN</button>
         </div>
-        <div class="col-sm-6 col-md-6">
+        <div class="col-sm-6 col-md-6" style="width: 50%; text-align: center;">
           <button
             type="button"
             class="actionBtn btn-danger"
@@ -163,49 +202,18 @@
         </div>
       </div>
       <div style="width: 100%; padding: 0px 24px;">
-        <button
-          id="endBtn"
-          type="button"
-          class="actionBtn end"
-          v-on:click="Complete(coordDriver, username, Guest)"
-        >KẾT THÚC</button>
+        <button id="endBtn" type="button" class="actionBtn end" v-on:click="endModalOpen()">KẾT THÚC</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-$(document).ready(function() {
-  $("#signoutBtn").click(function() {
-    $("#signoutModal").fadeIn("fast");
-  });
-
-  $("#endBtn").click(function() {
-    $("#endModal").fadeIn("fast");
-  });
-
-  $("#signoutYes").click(function() {
-    $("#signoutModal").fadeOut("fast");
-  });
-
-  $("#signoutNo").click(function() {
-    $("#signoutModal").fadeOut("fast");
-  });
-
-  $("#endYes").click(function() {
-    $("#endModal").fadeOut("fast");
-    $("#end").hide();
-  });
-
-  $("#endNo").click(function() {
-    $("#endModal").fadeOut("fast");
-  });
-});
 
 import io from "socket.io-client";
 import axios from "axios";
 
-var socket = require("socket.io-client")("http://172.16.8.51:1412");
+var socket = require("socket.io-client")("http://172.16.1.190:1412");
 socket.on("connect", function() {});
 
 export default {
@@ -265,9 +273,9 @@ export default {
         icon: self.iconDriver
       });
 
-       axios
+      axios
         .post(
-          "http://172.16.8.51:3000/api/driver/updateLocationDriver",
+          "http://172.16.1.190:3000/api/driver/updateLocationDriver",
           {
             lat: self.coordDriver.lat,
             lng: self.coordDriver.lng,
@@ -275,8 +283,8 @@ export default {
           },
           {
             headers: {
-               'Content-Type': 'application/json;charset=UTF-8',
-               "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json;charset=UTF-8",
+              "Access-Control-Allow-Origin": "*",
               "x-access-token": this.$localStorage.get("access_token")
             }
           }
@@ -287,16 +295,14 @@ export default {
 
       self.map.setCenter(self.coordDriver);
       self.map.addObject(self.markerDriver);
-
-     
     });
 
     socket.on("getInfoRequestByRequestIDEvent", function(response) {
       if (response) {
         self.Guest = response[0];
         self.time_out = setTimeout(function() {
-          alert("Hết thời gian phản hồi");
           document.getElementById("take").style.display = "none";
+          document.getElementById("imgCurrent").style.marginTop = "500px";
           self.Refuse(self.time_out, self.Guest, self.username);
         }, 10000);
       }
@@ -376,11 +382,11 @@ export default {
 
     this.ui = new H.ui.UI.createDefault(this.map, defaultLayers);
 
-    this.map.addEventListener("tap", (evt) => EventBus.$emit("HandleTap", evt));
+    this.map.addEventListener("tap", evt => EventBus.$emit("HandleTap", evt));
 
-      EventBus.$on("HandleTap", evt => {
-        alert("handle");
-       var coord = self.map.screenToGeo(
+    EventBus.$on("HandleTap", evt => {
+      alert("handle");
+      var coord = self.map.screenToGeo(
         evt.currentPointer.viewportX,
         evt.currentPointer.viewportY
       );
@@ -391,8 +397,10 @@ export default {
       );
       var pointNew = new H.geo.Point(coord.lat, coord.lng);
       var distance = pointDriver.distance(pointNew);
-      if (distance > 100) alert("Vị trí được cập nhật xa hơn 100m");
-      else {
+      if (distance > 100) {
+        $("#modal-msg").text("Vị trí cập nhật xa hơn 100m");
+        $("#modal-template").fadeIn();
+      } else {
         alert("tap");
         EventBus.$emit("DriverLocation", coord);
         if (self.Guest.ID != null) {
@@ -407,7 +415,6 @@ export default {
           }
         }
       }
-
     });
 
     //receive booking
@@ -415,8 +422,7 @@ export default {
       alert("hasRequestBooking");
       if (guest.ID != null) {
         document.getElementById("take").style.display = "block";
-        document.getElementById("imgCurrent").style.marginTop = "200px";
-
+        document.getElementById("imgCurrent").style.marginTop = "350px";
         //sent ID request to get info request
         socket.emit("getInfoRequestByRequestID", guest.ID);
       }
@@ -424,13 +430,12 @@ export default {
   },
   methods: {
     CurrentLocation() {
-     
       this.$getLocation({
         enableHighAccuracy: false, //defaults to false
         timeout: Infinity, //defaults to Infinity
         maximumAge: 0 //defaults to 0
       }).then(coordinates => {
-         alert("btn");
+        alert("btn");
         EventBus.$emit("DriverLocation", coordinates);
       });
     },
@@ -443,7 +448,7 @@ export default {
       }
       //notification to server
       axios.post(
-        "http://172.16.8.51:3000/api/driver/updateLocationDriver",
+        "http://172.16.1.190:3000/api/driver/updateLocationDriver",
         {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
@@ -456,7 +461,7 @@ export default {
         }
       );
       axios.post(
-        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
+        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
         {
           status: "READY",
           username: username
@@ -484,7 +489,7 @@ export default {
 
       //notification to server
       axios.post(
-        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
+        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -504,7 +509,7 @@ export default {
       window.clearTimeout(timeout);
       EventBus.$emit("Route", false);
       axios.post(
-        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
+        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
         {
           status: "BUSY",
           username: username
@@ -523,7 +528,7 @@ export default {
       socket.emit("updateStatusRequestBooking", params);
 
       axios.post(
-        "http://172.16.8.51:3000/api/bookingBike/driverAcceptBooking",
+        "http://172.16.1.190:3000/api/bookingBike/driverAcceptBooking",
         {
           ID: guestID,
           driverUsername: username
@@ -547,7 +552,7 @@ export default {
       };
       axios
         .post(
-          "http://172.16.8.51:3000/api/bookingBike/verifyRequestBooking",
+          "http://172.16.1.190:3000/api/bookingBike/verifyRequestBooking",
           {
             ID: Guest.ID,
             lat: Guest.guest_lat,
@@ -562,9 +567,11 @@ export default {
         )
         .then(response => {
           if (response.data.msg == "verify success!") {
-            alert("Đã từ chối");
+            $("#modal-msg").text("Đã từ chối");
+            $("#modal-template").fadeIn();
           } else {
-            alert("Đã xảy ra lỗi");
+            $("#modal-msg").text("Đã xảy ra lỗi");
+            $("#modal-template").fadeIn();
           }
         })
         .catch(err => {
@@ -583,24 +590,33 @@ export default {
 
       EventBus.$emit("Route", true);
     },
+    endModalOpen() {
+      $("#endModal").fadeIn();
+    },
     Complete(coordDriver, username, Guest) {
       var params = {
         status: "complete",
         ID: Guest.ID
       };
       socket.emit("updateStatusRequestBooking", params);
+      $("#endModal").fadeOut("fast");
+      $("#end").hide();
+      document.getElementById("imgCurrent").style.marginTop = "500px";
       document.getElementById("end").style.display = "none";
       document.getElementById("hereMap").style.display = "block";
 
       this.Ready(coordDriver, username, Guest);
     },
+    endModalClose() {
+      $("#endModal").fadeOut();
+    },
     LogOut(username, map) {
-      map.removeEventListener("tap", (evt) => EventBus.$emit("HandleTap", evt));
-
+      map.removeEventListener("tap", evt => EventBus.$emit("HandleTap", evt));
+      $("#signoutModal").fadeOut();
       this.$localStorage.remove("access-token");
       this.$localStorage.remove("refresh-token");
       axios.post(
-        "http://172.16.8.51:3000/api/driver/updateStatusDriver",
+        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
         {
           status: "STANDBY",
           username: username
@@ -612,8 +628,19 @@ export default {
         }
       );
       this.$router.replace({ name: "Login" });
+    },
+    signoutBtnClick() {
+      $("#signoutModal").fadeIn("fast");
+    },
+    signoutNoClick() {
+      $("#signoutModal").fadeOut("fast");
+    },
+    endNoClick() {
+      $("#endModal").fadeOut("fast");
+    },
+    closeMT() {
+      $("#modal-template").fadeOut();
     }
- 
   }
 };
 </script>
