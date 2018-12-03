@@ -196,7 +196,6 @@ export default {
 
     //receive new request
     socket.on("addNewRequestBookingEvent", function(data) {
-        alert(JSON.stringify(data));
       data.time = VueMoment.unix(data.time).format("DD/MM/YYYY HH:mm");
       self.requests.unshift(data);
     });
