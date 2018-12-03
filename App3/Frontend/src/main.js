@@ -4,6 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+export const IPGlobal = new Vue({
+  data: {
+    IP : '172.16.9.40'
+  }
+})
+
 import 'here-js-api/scripts/mapsjs-core';
 import 'here-js-api/scripts/mapsjs-service';
 import 'here-js-api/scripts/mapsjs-ui';

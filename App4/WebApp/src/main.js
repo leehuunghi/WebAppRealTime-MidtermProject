@@ -10,6 +10,12 @@ import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/scripts/mapsjs-clustering';
 
+export const IPGlobal = new Vue({
+  data: {
+    IP : '172.16.9.40'
+  }
+})
+
 import VueGeolocation from 'vue-browser-geolocation';
 Vue.use(VueGeolocation);
 

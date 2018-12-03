@@ -23,8 +23,9 @@
 <script>
 import io from "socket.io-client";
 import axios from "axios";
+import {IPGlobal} from "../main.js";
 
-var socket = require("socket.io-client")("http://172.16.8.51:3030");
+var socket = require("socket.io-client")(`http://${IPGlobal.IP}:3030`);
 
 export default {
   name: "MapRouter",

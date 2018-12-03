@@ -136,6 +136,7 @@ $(document).ready(function() {
 });
 
 import axios from "axios";
+import {IPGlobal} from "../main.js";
 
 export default {
   data() {
@@ -175,7 +176,7 @@ export default {
       }
       if (flag==true) {
       axios
-        .post("http://172.168.10.107:3000/api/bookingBike/book", this.formdata, {
+        .post(`http://${IPGlobal.IP}:3000/api/bookingBike/book`, this.formdata, {
           headers: {
             'x-access-token': this.$localStorage.get('access_token')
           }

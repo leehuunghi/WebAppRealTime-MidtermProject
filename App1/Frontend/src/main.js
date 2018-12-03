@@ -4,20 +4,17 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+export const IPGlobal = new Vue({
+  data: {
+    IP : '172.16.9.40'
+  }
+})
+
+
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
 
 Vue.config.productionTip = false
-
-import VueLocalStorage from 'vue-localstorage'
-
-Vue.use(VueLocalStorage)
-
-Vue.use({
-  install: function(Vue, options){
-      Vue.prototype.$jQuery = require('jquery'); // you'll have this.$jQuery anywhere in your vue project
-  }
-})
 
 import VueLocalStorage from 'vue-localstorage'
 

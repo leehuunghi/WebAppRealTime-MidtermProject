@@ -136,8 +136,9 @@ $(document).ready(function(){
 import io from "socket.io-client";
 import VueMoment from "moment";
 import axios from "axios";
+import {IPGlobal} from "../main.js";
 
-var socket = require("socket.io-client")("http://172.16.8.51:3030");
+var socket = require("socket.io-client")(`http://${IPGlobal.IP}:3030`);
 socket.on("connect", function() {});
 
 export default {
@@ -153,7 +154,7 @@ export default {
     var self = this;
     var access_token = this.$localStorage.get("access_token");
     axios
-      .get("http://172.16.8.51:3000/api/bookingBike/loadAllRequestBooking", {
+      .get(`http://${IPGlobal.IP}:3000/api/bookingBike/loadAllRequestBooking`, {
         headers: {
           "x-access-token": access_token
         }

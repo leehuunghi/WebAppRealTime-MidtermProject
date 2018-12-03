@@ -212,8 +212,9 @@
 
 import io from "socket.io-client";
 import axios from "axios";
+import {IPGlobal} from "../main.js";
 
-var socket = require("socket.io-client")("http://172.16.1.190:1412");
+var socket = require("socket.io-client")(`http://${IPGlobal.IP}:1412`);
 socket.on("connect", function() {});
 
 export default {
@@ -273,7 +274,7 @@ export default {
 
       axios
         .post(
-          "http://172.16.1.190:3000/api/driver/updateLocationDriver",
+          `http://${IPGlobal.IP}:3000/api/driver/updateLocationDriver`,
           {
             lat: self.coordDriver.lat,
             lng: self.coordDriver.lng,
@@ -442,7 +443,7 @@ export default {
       }
       //notification to server
       axios.post(
-        "http://172.16.1.190:3000/api/driver/updateLocationDriver",
+        `http://${IPGlobal.IP}:3000/api/driver/updateLocationDriver`,
         {
           lat: coordDriver.lat,
           lng: coordDriver.lng,
@@ -455,7 +456,7 @@ export default {
         }
       );
       axios.post(
-        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
+        `http://${IPGlobal.IP}:3000/api/driver/updateStatusDriver`,
         {
           status: "READY",
           username: username
@@ -483,7 +484,7 @@ export default {
 
       //notification to server
       axios.post(
-        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
+        `http://${IPGlobal.IP}:3000/api/driver/updateStatusDriver`,
         {
           status: "STANDBY",
           username: username
@@ -503,7 +504,7 @@ export default {
       window.clearTimeout(timeout);
       EventBus.$emit("Route", false);
       axios.post(
-        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
+        `http://${IPGlobal.IP}:3000/api/driver/updateStatusDriver`,
         {
           status: "BUSY",
           username: username
@@ -522,7 +523,7 @@ export default {
       socket.emit("updateStatusRequestBooking", params);
 
       axios.post(
-        "http://172.16.1.190:3000/api/bookingBike/driverAcceptBooking",
+        `http://${IPGlobal.IP}:3000/api/bookingBike/driverAcceptBooking`,
         {
           ID: guestID,
           driverUsername: username
@@ -546,7 +547,7 @@ export default {
       };
       axios
         .post(
-          "http://172.16.1.190:3000/api/bookingBike/verifyRequestBooking",
+          `http://${IPGlobal.IP}:3000/api/bookingBike/verifyRequestBooking`,
           {
             ID: Guest.ID,
             lat: Guest.guest_lat,
@@ -609,7 +610,7 @@ export default {
       this.$localStorage.remove("access-token");
       this.$localStorage.remove("refresh-token");
       axios.post(
-        "http://172.16.1.190:3000/api/driver/updateStatusDriver",
+        `http://${IPGlobal.IP}:3000/api/driver/updateStatusDriver`,
         {
           status: "STANDBY",
           username: username
