@@ -30,6 +30,7 @@ exports.updateStatusBooking = object => {
 
 exports.updateLocationGuest = location => {
     var sql = `UPDATE BookingBike SET guest_lat = ${location.lat}, guest_lng = ${location.lng}, status = '${location.status}' where ID = ${location.ID}`;
+    console.log(sql);
     return db.load(sql);
 }
 
@@ -45,5 +46,15 @@ exports.updateStatusDriver = object => {
 
 exports.getInfoRequestByRequestID = id => {
     var sql = `select * from BookingBike where ID = ${id}`;
+    return db.load(sql);
+}
+
+exports.loadBookingBikeById = id => {
+    var sql = `select * from BookingBike where ID = ${id}`;
+    return db.load(sql);
+}
+
+exports.driverAcceptBooking = object => {
+    var sql = `update BookingBike set driverUsername = '${object.driverUsername}', driverID = '${object.driverID}', status = 'hasBike' where ID = ${object.ID}`;
     return db.load(sql);
 }

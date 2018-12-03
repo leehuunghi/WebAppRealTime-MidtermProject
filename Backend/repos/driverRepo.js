@@ -28,6 +28,11 @@ exports.loadAllPositionDriverReady = driverUsername => {
     return db.load(sql);
 }
 
+exports.getInfoDriverByDriverUsername = username => {
+    var sql = `select * from Driver where username = '${username}'`;
+    return db.load(sql);
+}
+
 exports.getInfoDriverByDriverID = id => {
     var sql = `select * from Driver where ID = ${id}`;
     return db.load(sql);
@@ -41,5 +46,31 @@ exports.updatePositionDriver = driverEntity => {
 
 exports.updateStatusDriver = driverEntity => {
     var sql = `update Driver set status = '${driverEntity.status}' where username = '${driverEntity.username}'`;
+    console.log(sql);
     return db.insert(sql);
 }
+
+exports.getDriverBest = async function (locationRequest, requestID) {
+    let check = false;
+    let result = -1;
+    for (let i = 0; i < 5000; i++) {
+        if (!check) {
+            await findDriverBest(locationRequest, requestID).then(value => {
+                if (value != -1) {
+                    check = true;
+                    result = value;
+                }
+            });
+        } else {
+            return result;
+        }
+        //Cap nhat trang thai request khong co xe nhan
+        if (i === 4999) requestRepo.updateStatusRe(requestID, 6).then(value => {
+            requestRepo.getRequest(requestID).then(data => {
+                events.publishRequestModified(data[0]);
+            })
+        })
+    }
+    return result;
+}
+

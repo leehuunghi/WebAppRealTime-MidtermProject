@@ -9,7 +9,7 @@ var io = require('socket.io')(server);
 var bookingBikeRepo = require('../repos/bookingBikeRepo');
 var driverRepo = require('../repos/driverRepo');
 
-var haversine = require('haversine')
+var haversine = require('haversine');
 
 io.on('connection', socket => {
     console.log("a user " + socket.id);
@@ -20,6 +20,15 @@ io.on('connection', socket => {
 
     socket.on('updateStatusBookingEvent', msg => {
         io.sockets.emit('updateStatusBookingEvent', msg);
+    })
+
+    socket.on('updateLocationDriver', username => {
+        // io.sockets.emit('updateLocationDriverEvent', msg);
+        driverRepo.getInfoDriverByDriverUsername(username).then(value => {
+            io.sockets.emit('getInfoDriverByDriverIDEvent', value[0]);
+        }).catch(err => {
+            console.log(err);
+        })
     })
 
     socket.on('addNewRequestBooking', msg => {
@@ -35,12 +44,12 @@ io.on('connection', socket => {
         })
     })
 
-    
-
     socket.on('error', err => {
         console.log(err);
     })
 });
+
+
 
 server.listen(3030, () => {
     console.log("Socket identify location listen port 3030!");
