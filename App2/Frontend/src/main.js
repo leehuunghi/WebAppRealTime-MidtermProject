@@ -10,12 +10,6 @@ import 'here-js-api/scripts/mapsjs-ui';
 import 'here-js-api/scripts/mapsjs-mapevents';
 import 'here-js-api/scripts/mapsjs-clustering';
 
-// import moment from 'moment-timezone'
- 
-// Vue.use(VueMoment, {
-//     // moment,
-// })
-
 import VueSSE from 'vue-sse';
 Vue.use(VueSSE);
 
@@ -29,31 +23,10 @@ Vue.use({
   }
 })
 
-window.EventBus = new Vue({  
-  data(){
-    return {
-      authenticated:""
-    }
-  }
- });
+window.EventBus = new Vue();
 
 import VueSessionStorage from 'vue-sessionstorage'
 Vue.use(VueSessionStorage)
-
-import VueLogger from 'vuejs-logger';
-const isProduction = process.env.NODE_ENV === 'production';
- 
-const options = {
-    isEnabled: true,
-    logLevel : isProduction ? 'error' : 'debug',
-    stringifyArguments : false,
-    showLogLevel : true,
-    showMethodName : true,
-    separator: '|',
-    showConsoleColors: true
-};
- 
-Vue.use(VueLogger, options);
 
 Vue.config.productionTip = false
 

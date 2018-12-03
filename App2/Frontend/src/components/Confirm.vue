@@ -44,8 +44,8 @@ export default {
   },
   methods: {
     LogOut() {
-      //   this.$localStorage.remove("access-token");
-      //   this.$localStorage.remove("refresh-token");
+        this.$localStorage.remove("access-token");
+        this.$localStorage.remove("refresh-token");
       this.$router.replace({ name: "FormLogin" });
     }
   }

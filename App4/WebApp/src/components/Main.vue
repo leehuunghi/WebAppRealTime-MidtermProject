@@ -256,12 +256,10 @@ export default {
       timeout: Infinity, //defaults to Infinity
       maximumAge: 0 //defaults to 0
     }).then(coordinates => {
-      alert("created");
       EventBus.$emit("DriverLocation", coordinates);
     });
 
     EventBus.$on("DriverLocation", coordinates => {
-      alert("DriverLocation");
       if (this.map.getObjects(this.markerDriver) != null) {
         if (this.map.getObjects(this.markerDriver) != "") {
           this.map.removeObject(this.markerDriver);
@@ -385,7 +383,6 @@ export default {
     this.map.addEventListener("tap", evt => EventBus.$emit("HandleTap", evt));
 
     EventBus.$on("HandleTap", evt => {
-      alert("handle");
       var coord = self.map.screenToGeo(
         evt.currentPointer.viewportX,
         evt.currentPointer.viewportY
@@ -401,7 +398,6 @@ export default {
         $("#modal-msg").text("Vị trí cập nhật xa hơn 100m");
         $("#modal-template").fadeIn();
       } else {
-        alert("tap");
         EventBus.$emit("DriverLocation", coord);
         if (self.Guest.ID != null) {
           EventBus.$emit("Route", true);
@@ -419,7 +415,6 @@ export default {
 
     //receive booking
     socket.on("hasRequestBookingEvent", function(guest) {
-      alert("hasRequestBooking");
       if (guest.ID != null) {
         document.getElementById("take").style.display = "block";
         document.getElementById("imgCurrent").style.marginTop = "350px";
@@ -435,7 +430,6 @@ export default {
         timeout: Infinity, //defaults to Infinity
         maximumAge: 0 //defaults to 0
       }).then(coordinates => {
-        alert("btn");
         EventBus.$emit("DriverLocation", coordinates);
       });
     },
@@ -575,7 +569,6 @@ export default {
           }
         })
         .catch(err => {
-          alert(err);
         });
     },
     Start(Guest) {

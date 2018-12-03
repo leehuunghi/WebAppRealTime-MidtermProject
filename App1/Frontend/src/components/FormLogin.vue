@@ -132,7 +132,6 @@ export default {
               this.$router.replace({ name: "FormInformation" });
             }
             else {
-              alert(1);
               $("#modal").fadeIn("fast");
             }
           })

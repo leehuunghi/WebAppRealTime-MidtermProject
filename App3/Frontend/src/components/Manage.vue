@@ -37,11 +37,7 @@
                         </div>
                     </div>
      </div>
-     <!-- <img src="/static/pics/backgroundapp2.png" alt="" class="cover">
-     <div style="position: absolute; top: 20px; right: 20px;" v-on:click="LogOut()">
-        <button class="logoutBtn">ĐĂNG XUẤT</button>
-    </div> -->
-
+     
     <div class="navbar" id="navbar" style="position: fixed; width: 100%; z-index: 99999; opacity: 0;">
         <div class="row" style="width: 100%; margin: 0px;">
             <div class="col-md-2">

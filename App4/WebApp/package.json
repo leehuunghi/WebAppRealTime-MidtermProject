@@ -11,14 +11,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "cross-env": "^5.2.0",
     "crypto-md5": "^1.0.0",
     "here-js-api": "^1.0.10",
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
     "socket.io-client": "^2.1.1",
     "uiv": "^0.28.0",
-    "v-switch-case": "^1.0.1",
     "vue": "^2.5.2",
     "vue-browser-geolocation": "^1.5.0",
     "vue-event-bus": "^1.0.2",
@@ -26,8 +24,7 @@
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
     "vue-sessionstorage": "^1.0.0",
-    "vue-sse": "^1.0.2",
-    "vuejs-logger": "^1.5.3"
+    "vue-sse": "^1.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
