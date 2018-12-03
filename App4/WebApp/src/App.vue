@@ -6,7 +6,7 @@
 
 <script>
 import axios from "axios";
-import {IPGlobal} from "../main.js";
+import {IPGlobal} from "./main.js";
 
 export default {
   data() {

@@ -82,6 +82,8 @@ $(document).ready(function() {
 });
 import axios from "axios";
 import md5 from "crypto-md5";
+import {IPGlobal} from "../main.js";
+
 export default {
   data() {
     return {
@@ -118,7 +120,7 @@ export default {
         var passmd5 = md5($("#password").val());
         this.formdata.password = passmd5;
         axios
-          .post("http://192.168.0.45:3000/api/employee/login", this.formdata)
+          .post(`http://${IPGlobal.IP}:3000/api/employee/login`, this.formdata)
           .then(response => {
             if (response.data.auth) {
               this.auth = response.data.auth;

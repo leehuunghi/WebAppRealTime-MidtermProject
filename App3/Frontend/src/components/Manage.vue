@@ -134,11 +134,11 @@ $(document).ready(function(){
 })
 
 import io from "socket.io-client";
-import VueMoment from "moment";
+import VueMoment from "moment"; 
 import axios from "axios";
 import {IPGlobal} from "../main.js";
 
-var socket = require("socket.io-client")(`http://${IPGlobal.IP}:3030`);
+var socket = require("socket.io-client")(`http://172.16.9.40:3030`);
 socket.on("connect", function() {});
 
 export default {
@@ -196,6 +196,7 @@ export default {
 
     //receive new request
     socket.on("addNewRequestBookingEvent", function(data) {
+        alert(JSON.stringify(data));
       data.time = VueMoment.unix(data.time).format("DD/MM/YYYY HH:mm");
       self.requests.unshift(data);
     });

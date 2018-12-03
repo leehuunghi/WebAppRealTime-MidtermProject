@@ -33,6 +33,7 @@
 <script>
 import axios from "axios";
 import VueMoment from "moment";
+import {IPGlobal} from "../main.js";
 
 export default {
   data() {
@@ -44,7 +45,7 @@ export default {
     var self = this;
     axios
       .get(
-        "http://192.168.0.45:3000/api/bookingBike/loadAllRequestBookingWaiting",
+        `http://${IPGlobal.IP}:3000/api/bookingBike/loadAllRequestBookingWaiting`,
         {
           headers: {
             "x-access-token": this.$localStorage.get("access_token")
@@ -81,7 +82,7 @@ export default {
     });
   },
   mounted() {
-    this.$sse("http://192.168.0.45:3000/api/a", { format: "json" })
+    this.$sse(`http://${IPGlobal.IP}:3000/api/a`, { format: "json" })
       .then(sse => {
         sse.subscribe("REQUEST_BOOKING", response => {
           response[0].time = VueMoment.unix(response[0].time).format(

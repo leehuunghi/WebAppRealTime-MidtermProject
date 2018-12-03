@@ -83,7 +83,8 @@ $(document).ready(function() {
 
 import axios from "axios";
 import { ModelSelect } from "vue-search-select";
-var selfID;
+import {IPGlobal} from "../main.js";
+
 export default {
   name: "HereMap",
   data() {
@@ -275,7 +276,7 @@ export default {
       EventBus.$emit("sendId", null, null, null);
       axios
         .post(
-          "http://192.168.0.45:3000/api/bookingBike/verifyRequestBooking",
+          `http://${IPGlobal.IP}:3000/api/bookingBike/verifyRequestBooking`,
           this.$session.get("ID"),
           {
             headers: {

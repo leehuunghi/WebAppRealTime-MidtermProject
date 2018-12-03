@@ -214,7 +214,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import {IPGlobal} from "../main.js";
 
-var socket = require("socket.io-client")(`http://${IPGlobal.IP}:1412`);
+var socket = require("socket.io-client")(`http://172.16.9.40:1412`);
 socket.on("connect", function() {});
 
 export default {
