@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900" rel="stylesheet">
+    <link href="res/css/layout.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body style="height: 100%;">
+    <div id="modal" class="modal-backdrop" style="background-color: rgba(0,0,0,0.5); display: none;">
+        <div class="modal" role="dialog" style="display: block; padding-top: 200px;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="padding: 20px; border: none !important; border-radius: 10px;">
+                    <div>
+                        <h5 class="mdTitle">Thông tin tài xế</h5>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <div class="row" style="margin: 5px 5px 25px 5px;">
+                            <div class="col-md-6">
+                                <div class="mdInfo-tit">Họ tên</div>
+                                <div class="mdInfo-Cnt">Nguyễn Văn A</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mdInfo-tit">Số điện thoại</div>
+                                <div class="mdInfo-Cnt">0123456789</div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin: 5px;">
+                            <div class="col-md-6">
+                                <div class="mdInfo-tit">Ngày sinh</div>
+                                <div class="mdInfo-Cnt">4/2/1995</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mdInfo-tit">Biển số xe</div>
+                                <div class="mdInfo-Cnt">39B2-87138</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right">
+                        <button id="close" type="button" class="mdBtn">ĐÓNG</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar" id="navbar" style="position: fixed; width: 100%; z-index: 999; opacity: 0;">
+        <div class="row" style="width: 100%; margin: 0px;">
+            <div class="col-md-2">
+                <img src="res/pics/logo-desktop-white.png" width="60px;" style="margin: 0 10px 0 0;">
+            </div>
+            <div class="col-md-8 navTitle">
+                Manager
+            </div>
+            <div class="col-md-2" style="text-align: right; padding-right: 0px;">
+                <div>
+                    <button class="logoutBtn-r">ĐĂNG XUẤT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="coverBg">
+        <div id="logoutBtn" style="position: fixed; width: 100%; text-align: right; z-index: 99;">
+            <button class="logoutBtn">Đăng xuất</button>
+        </div>
+        <img id="cover" src="res/pics/cover-manager.png" style="width: 100%; height: auto; opacity: 1; margin-bottom: 0px;">
+    </div>
+
+    <div id="content" class="content blueText center margin" style="z-index: 9999;">
+        <div class="tit">Chào Nguyên!<br>Danh sách các request</div>
+        <div class="i-am-centered" style="margin-top: 20px; margin-bottom: 50px;">
+            <div class="row tableTitle" id="title">
+                <div class="col-md-1">SỐ THỨ TỰ</div>
+                <div class="col-md-3">HÀNH KHÁCH</div>
+                <div class="col-md-3">ĐỊA CHỈ</div>
+                <div class="col-md-2">THỜI GIAN ĐẶT</div>
+                <div class="col-md-3">TRẠNG THÁI</div>
+            </div>
+            <div class="row tableRow" id="row1">
+                <div class="col-md-1">1</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 notLocated">
+                    Chưa được định vị
+                </div>
+            </div>
+            <div class="row tableRow" id="row2">
+                <div class="col-md-1">2</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 located">
+                    Đã định vị xong
+                </div>
+            </div>
+            <div class="row tableRow" id="row3">
+                <div class="col-md-1">3</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 taken">
+                    <div class="row">
+                        <div class="col-md-5">
+                            Đã có xe nhận
+                        </div>
+                        <div id="driverid" class="col-md-5" style="color: #888; cursor: pointer;">
+                            13821471
+                        </div>
+                        <div class="col-md-2">
+                            <button class="shortestWay" style="float: right;">
+                                <img src="res/icons/shortest-way.png">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row tableRow" id="row4">
+                <div class="col-md-1">4</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 moving">
+                    Đang di chuyển
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <div class="row tableRow" id="row5">
+                <div class="col-md-1">5</div>
+                <div class="col-md-3">Nguyễn Văn A</div>
+                <div class="col-md-3">123 Đường ABC, quận 1, tp.HCM</div>
+                <div class="col-md-2">08:45:67</div>
+                <div class="col-md-3 done">
+                    Đã hoàn thành
+                </div>
+            </div>
+            <ul id="pagination">
+                <label class="pagie active">1</label>
+                <label class="pagie">2</label>
+                <label class="pagie">3</label>
+        </div>
+    </div>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        $(window).on('scroll', function () {
+            var st = $(this).scrollTop();
+            $("#cover").css({
+                'opacity': 1 - st / 350
+            });
+            $('#navbar').css({
+                'opacity': 0 + (st - 300) / 50
+            });
+            $("#content").css(
+                'margin', '-' + (-20 - st / 350) + 'px 0px 0px 0px'
+            );
+        });
+
+        $("#driverid").click(function () {
+            $("#modal").fadeIn("fast");
+        })
+
+        $("#close").click(function () {
+            $("#modal").fadeOut("fast");
+        })
+    </script>
+
+</body>
+
+</html>
