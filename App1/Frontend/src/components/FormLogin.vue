@@ -44,10 +44,6 @@ $(document).ready(function() {
       $("#password").addClass("errorPH");
       $("#password").attr("placeholder", "Vui lòng nhập mật khẩu");
     }
-    // else {
-    //   // $("#signin").submit();
-    //   $("#modal").fadeIn("fast");
-    // }
   });
   $("#username").focusout(function() {
     if ($("#username").val() == "") {
